@@ -2,7 +2,6 @@
 
 #include "matrixMultiplier.h"
 
-
 // For recursive multiplier only matrixes 2^N size available !
 class RecursiveMultiplier : public MatrixMultiplier
 {

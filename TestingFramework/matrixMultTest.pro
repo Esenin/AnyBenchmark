@@ -1,23 +1,25 @@
 TEMPLATE = app
 CONFIG += console
-CONFIG += c++11
 CONFIG -= app_bundle
 CONFIG += qt
 
-TARGET = MultiplierBenchmark
+QMAKE_CXXFLAGS += -std=c++11
+
+TARGET = benchmark
 
 SOURCES += src/main.cpp \
     src/benchmaker.cpp \
-    src/regularMultiplier.cpp \
-    src/matrixMultiplier.cpp \
-    src/transposedMultiplier.cpp \
-    src/recursiveMultiplier.cpp
+    tests/matrixMultiplying/regularMultiplier.cpp \
+    tests/matrixMultiplying/matrixMultiplier.cpp \
+    tests/matrixMultiplying/transposedMultiplier.cpp \
+    tests/matrixMultiplying/recursiveMultiplier.cpp
 
 HEADERS += \
     src/benchmaker.h \
-    src/regularMultiplier.h \
-    src/matrixMultiplier.h \
-    src/transposedMultiplier.h \
-    src/recursiveMultiplier.h \
-    src/arrayMaster.h
+	src/testObject.h \
+    tests/matrixMultiplying/regularMultiplier.h \
+    tests/matrixMultiplying/matrixMultiplier.h \
+    tests/matrixMultiplying/transposedMultiplier.h \
+    tests/matrixMultiplying/recursiveMultiplier.h \
+    tests/matrixMultiplying/arrayMaster.h
 

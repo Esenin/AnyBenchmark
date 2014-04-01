@@ -1,14 +1,15 @@
 #pragma once
+#include "../../src/testObject.h"
 #include "arrayMaster.h"
 
-class MatrixMultiplier
+class MatrixMultiplier : public TestObject
 {
 public:
 	MatrixMultiplier();
 	virtual ~MatrixMultiplier();
 
-	void setMatrixSize(int const &newSize);
-	virtual void prepareMatrixes();
+	void setParam(int const &param);
+	virtual void prepare();
 	virtual void run() = 0;
 	virtual void clear();
 

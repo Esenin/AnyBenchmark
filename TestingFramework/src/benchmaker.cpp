@@ -1,11 +1,14 @@
 #include "benchmaker.h"
 
+using std::cout;
+using std::endl;
+
 Benchmaker::Benchmaker()
 	: mLogToFile(false)
 	, mRoundsCount(10)
-	, mLogger(NULL)
+	, mTestObj(nullptr)
+	, mLogger(nullptr)
 {
-	ArrayMaster::randomize();
 }
 
 Benchmaker::~Benchmaker()
@@ -13,7 +16,7 @@ Benchmaker::~Benchmaker()
 	freeTestObject();
 }
 
-void Benchmaker::makeBenchmark(int const startValue, int const maxValue, int const stepSize)
+void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int const &stepSize)
 {
 	if (mLogToFile)
 	{
@@ -25,7 +28,6 @@ void Benchmaker::makeBenchmark(int const startValue, int const maxValue, int con
 
 	QTime startBenchmarkTime = QTime::currentTime();
 	int curSize = startValue;
-	createTestObject();
 
 	do
 	{
@@ -44,7 +46,7 @@ void Benchmaker::makeBenchmark(int const startValue, int const maxValue, int con
 
 		cout << "N = " << curSize
 				<< "\taverage is " << average
-				<< " msecs, \t\t Time for round: " << startRoundTime.secsTo(QTime::currentTime()) << " sec"
+				<< " msecs, \tTime for round: " << startRoundTime.secsTo(QTime::currentTime()) << " sec"
 				<< endl;
 		curSize += stepSize;
 	}
@@ -54,16 +56,19 @@ void Benchmaker::makeBenchmark(int const startValue, int const maxValue, int con
 	cout << "Benchmark already done! Total time: " << totalTime
 			<< " seconds (" << (double)totalTime / 60 << " minutes)\n\n";
 
-	freeTestObject();
 	closeFile();
 }
 
-void Benchmaker::setRunnableObject(Multiplier const type)
+void Benchmaker::setRunnableObject(TestObject *object)
 {
-	mCurType = type;
+	if (mTestObj != nullptr)
+	{
+		delete mTestObj;
+	}
+	mTestObj = object;
 }
 
-void Benchmaker::setLogginToFile(const bool mustLog)
+void Benchmaker::setLogginToFile(bool const &mustLog)
 {
 	mLogToFile = mustLog;
 }
@@ -73,58 +78,46 @@ void Benchmaker::setRoundsCount(int const &count)
 	mRoundsCount = count;
 }
 
-unsigned int Benchmaker::makeRound(int const &arrSize)
+unsigned int Benchmaker::makeRound(int const &paramN)
 {
-	mMultiplier->setMatrixSize(arrSize);
-	mMultiplier->prepareMatrixes();
+	mTestObj->setParam(paramN);
+	mTestObj->prepare();
 
-	unsigned int result = multiplyTest();
+	unsigned int result = makeTest();
 
-	mMultiplier->clear();
+	mTestObj->clear();
 
 	return result;
 }
 
-unsigned int Benchmaker::multiplyTest()
+unsigned int Benchmaker::makeTest()
 {
 	QTime startTime = QTime::currentTime();
 	unsigned int msecs = 0;
 
-	mMultiplier->run();
+	mTestObj->run();
 
-	msecs =  startTime.msecsTo(QTime::currentTime());
+	msecs = startTime.msecsTo(QTime::currentTime());
 	return msecs;
-}
-
-void Benchmaker::createTestObject()
-{
-	switch( mCurType)
-	{
-	case Regular:
-		mMultiplier = new RegularMultiplier();
-		break;
-	case Transposed:
-		mMultiplier = new TransposedMultiplier();
-		break;
-	case Recursive:
-		mMultiplier = new RecursiveMultiplier();
-		break;
-	}
 }
 
 void Benchmaker::freeTestObject()
 {
-	if (mMultiplier != NULL)
+	if (mTestObj != nullptr)
 	{
-		delete mMultiplier;
-		mMultiplier = NULL;
+		delete mTestObj;
+		mTestObj = nullptr;
 	}
 }
 
 void Benchmaker::createFile()
 {
-	mLogger = new QFile ("multiplication_" + QTime::currentTime().toString("hh-mm-ss") + ".txt");
-	mLogger->open(QFile::WriteOnly);
+	mLogger = new QFile ("multiplication_" + QTime::currentTime().toString("hh-mm-ss-zzz") + ".txt");
+	if (!mLogger->open(QFile::WriteOnly))
+	{
+		mLogToFile = false;
+		cout << "Cannot open file: " << mLogger->fileName().toStdString() << endl;
+	}
 }
 
 void Benchmaker::putToFile(int const param, double const &average)
@@ -136,7 +129,7 @@ void Benchmaker::putToFile(int const param, double const &average)
 
 void Benchmaker::closeFile()
 {
-	if (mLogger == NULL)
+	if (mLogger == nullptr || !mLogToFile)
 		return;
 
 	cout << "\n Tests result stored at: " << mLogger->fileName().toStdString() << endl << endl;

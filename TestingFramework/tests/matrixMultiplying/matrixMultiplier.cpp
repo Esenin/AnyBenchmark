@@ -2,10 +2,11 @@
 
 MatrixMultiplier::MatrixMultiplier()
 	: mMatrixSize(10)
-	, mA(NULL)
-	, mB(NULL)
-	, mC(NULL)
+	, mA(nullptr)
+	, mB(nullptr)
+	, mC(nullptr)
 {
+	ArrayMaster::randomize();
 }
 
 MatrixMultiplier::~MatrixMultiplier()
@@ -13,12 +14,12 @@ MatrixMultiplier::~MatrixMultiplier()
 	clear();
 }
 
-void MatrixMultiplier::setMatrixSize(int const &newSize)
+void MatrixMultiplier::setParam(int const &param)
 {
-	mMatrixSize = newSize;
+	mMatrixSize = param;
 }
 
-void MatrixMultiplier::prepareMatrixes()
+void MatrixMultiplier::prepare()
 {
 	clear();
 	mA = new int[mMatrixSize * mMatrixSize];
@@ -30,19 +31,19 @@ void MatrixMultiplier::prepareMatrixes()
 
 void MatrixMultiplier::clear()
 {
-	if (mA != NULL)
+	if (mA != nullptr)
 	{
 		delete[] mA;
-		mA = NULL;
+		mA = nullptr;
 	}
-	if (mB != NULL)
+	if (mB != nullptr)
 	{
 		delete[] mB;
-		mB = NULL;
+		mB = nullptr;
 	}
-	if (mC != NULL)
+	if (mC != nullptr)
 	{
 		delete[] mC;
-		mC = NULL;
+		mC = nullptr;
 	}
 }

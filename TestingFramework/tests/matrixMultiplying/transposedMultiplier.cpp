@@ -1,6 +1,5 @@
 #include "transposedMultiplier.h"
 
-
 TransposedMultiplier::TransposedMultiplier()
 {
 }
