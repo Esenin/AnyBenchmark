@@ -14,3 +14,7 @@
 
 
 *.user
+Makefile*
+TestingFramework/debug/*
+TestingFramework/release/*
+multiplication_*.txt
