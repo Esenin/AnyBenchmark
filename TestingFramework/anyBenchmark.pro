@@ -16,7 +16,7 @@ SOURCES += src/main.cpp \
 
 HEADERS += \
     src/benchmaker.h \
-	src/testObject.h \
+    src/testObject.h \
     tests/matrixMultiplying/regularMultiplier.h \
     tests/matrixMultiplying/matrixMultiplier.h \
     tests/matrixMultiplying/transposedMultiplier.h \

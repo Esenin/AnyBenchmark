@@ -61,10 +61,7 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 
 void Benchmaker::setRunnableObject(TestObject *object)
 {
-	if (mTestObj != nullptr)
-	{
-		delete mTestObj;
-	}
+	freeTestObject();
 	mTestObj = object;
 }
 
