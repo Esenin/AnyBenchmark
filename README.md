@@ -1,5 +1,5 @@
-MatrixMultiplyBenchmark
+AnyBenchmark
 =======================
 
-Platform for testing performance of matrix multiplying algos
+Abstract platform for testing performance
 Lang: C++/Qt
