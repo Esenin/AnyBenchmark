@@ -18,6 +18,11 @@ Benchmaker::~Benchmaker()
 
 void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int const &stepSize)
 {
+	if (!mTestObj)
+	{
+		cout << "Set test object first!\n";
+		return;
+	}
 	if (mLogToFile)
 	{
 		createFile();

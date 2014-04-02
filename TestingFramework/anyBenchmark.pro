@@ -4,6 +4,9 @@ CONFIG -= app_bundle
 CONFIG += qt
 
 QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS -= -O1
+#QMAKE_CXXFLAGS += -O2
+
 
 TARGET = benchmark
 
@@ -12,7 +15,10 @@ SOURCES += src/main.cpp \
     tests/matrixMultiplying/regularMultiplier.cpp \
     tests/matrixMultiplying/matrixMultiplier.cpp \
     tests/matrixMultiplying/transposedMultiplier.cpp \
-    tests/matrixMultiplying/recursiveMultiplier.cpp
+    tests/matrixMultiplying/recursiveMultiplier.cpp \
+    tests/binaryTree/vanEmdeBoasTree.cpp \
+    tests/binaryTree/iTree.cpp \
+    tests/binaryTree/splayTree.cpp
 
 HEADERS += \
     src/benchmaker.h \
@@ -21,5 +27,8 @@ HEADERS += \
     tests/matrixMultiplying/matrixMultiplier.h \
     tests/matrixMultiplying/transposedMultiplier.h \
     tests/matrixMultiplying/recursiveMultiplier.h \
-    tests/matrixMultiplying/arrayMaster.h
+    tests/matrixMultiplying/arrayMaster.h \
+    tests/binaryTree/vanEmdeBoasTree.h \
+    tests/binaryTree/iTree.h \
+    tests/binaryTree/splayTree.h
 
