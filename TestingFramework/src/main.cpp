@@ -28,22 +28,26 @@ void matrixBenchmark(Benchmaker &benchmark)
 }*/
 
 #include "tests/binaryTree/vanEmdeBoasTree.h"
-//#include "tests/binaryTree/avlTree.h"
+#include "tests/binaryTree/splayTree.h"
 
 void treesBenchmark(Benchmaker &benchmark)
 {
-	VEBoasTree<32> tree;
+	SplayTree tree;
 	tree.insert(5);
 	unsigned long long const start = 199999;
 	unsigned long long const top = 200033;
 
 
-	for (unsigned long long i = 0; i <= top; i++)
+	for (unsigned long long i = 0; i <= 10; i++)
 	{
 		tree.insert(i);
 	}
 
 	cout << "\nsearching:\n";
+	for (unsigned long long i = 0; i <= 13; i++)
+	{
+		cout << (tree.lookup(i)? i : 777) << "\n";
+	}
 	for (unsigned long long i = start; i <= top + 10; i++)
 	{
 		cout << (tree.lookup(i)? i : 777) << "\n";
