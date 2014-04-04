@@ -118,12 +118,12 @@ void BTree::splitChild(BTree::Page *host, short const index)
 		}
 	}
 	y->count = pivot - 1;
-	for (short i = host->count; i >= index; i--)
+	for (short i = host->count; i >= index + 1; i--)
 	{
 		host->children[i + 1] = host->children[i];
 	}
 	host->children[index + 1] = z;
-	for (short i = host->count - 1; i >= index; i++)
+	for (short i = host->count - 1; i >= index; i--)
 	{
 		host->keys[i + 1] = host->keys[i];
 	}

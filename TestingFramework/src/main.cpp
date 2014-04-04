@@ -28,22 +28,49 @@ void matrixBenchmark(Benchmaker &benchmark)
 }*/
 
 #include "tests/binaryTree/testTreeAdapter.h"
-using namespace Tree;
+
+void treePretests()
+{
+	int const testSize = 10000;
+	Tree::BTree *bTree = new Tree::BTree();
+	Tree::SplayTree *splayTree = new Tree::SplayTree();
+	Tree::VEBoasTree<32> *vEBTree = new Tree::VEBoasTree<32>();
+	for (int i = 0; i < testSize; i++)
+	{
+		bTree->insert(i);
+		splayTree->insert(i);
+		vEBTree->insert(i);
+	}
+	for (int i = 0; i < testSize; i++)
+	{
+		Q_ASSERT
+		(
+			bTree->lookup(i)
+			&& splayTree->lookup(i)
+			&& vEBTree->lookup(i)
+		);
+	}
+	Q_ASSERT(!bTree->lookup(-1) && !splayTree->lookup(-1) && !vEBTree->lookup(-1));
+
+	delete vEBTree;
+	delete splayTree;
+	delete bTree;
+}
 
 void treesBenchmark(Benchmaker &benchmark)
 {
-//	benchmark.setRunnableObject(new TestTreeAdapter(splay));
-//	benchmark.makeBenchmark(100, 1000, 100);
-//	benchmark.makeBenchmark(1000, 200000, 1000);
+	treePretests();
+	benchmark.setRunnableObject(new TestTreeAdapter(splay));
+	benchmark.makeBenchmark(100, 1000, 50);
+	benchmark.makeBenchmark(1000, 300000, 1000);
 
 	benchmark.setRunnableObject(new TestTreeAdapter(b));
-	benchmark.makeBenchmark(20, 0, 0);
-	//benchmark.makeBenchmark(1000, 200000, 1000);
+	benchmark.makeBenchmark(100, 1000, 50);
+	benchmark.makeBenchmark(1000, 300000, 1000);
 
-//	benchmark.setRunnableObject(new TestTreeAdapter(vanEmdeBoas));
-//	benchmark.makeBenchmark(100, 1000, 100);
-//	benchmark.makeBenchmark(1000, 200000, 1000);
-
+	benchmark.setRunnableObject(new TestTreeAdapter(vanEmdeBoas));
+	benchmark.makeBenchmark(100, 1000, 50);
+	benchmark.makeBenchmark(1000, 300000, 1000);
 }
 
 int main()
@@ -51,9 +78,9 @@ int main()
 	Benchmaker benchmark;
 
 	// uncomment this to save data to file
-	//benchmark.setLogginToFile(true);
+	benchmark.setLogginToFile(true);
 
 	//matrixBenchmark(benchmark);
-	treesBenchmark(benchmark);
 
+	treesBenchmark(benchmark);
 }

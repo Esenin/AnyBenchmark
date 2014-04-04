@@ -16,6 +16,15 @@ Benchmaker::~Benchmaker()
 	freeTestObject();
 }
 
+void Benchmaker::startLogging()
+{
+	if (mLogToFile)
+	{
+		createFile();
+		mLogger->write(QString("  N  \tTime\n").toUtf8());
+	}
+}
+
 void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int const &stepSize)
 {
 	if (!mTestObj)
@@ -23,11 +32,7 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 		cout << "Set test object first!\n";
 		return;
 	}
-	if (mLogToFile)
-	{
-		createFile();
-		mLogger->write(QString("  N  \tTime\n").toUtf8());
-	}
+	startLogging();
 
 	cout << "Tests have been started\n";
 
@@ -53,7 +58,7 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 				<< "\taverage is " << average
 				<< " msecs, \tTime for round: " << startRoundTime.secsTo(QTime::currentTime()) << " sec"
 				<< endl;
-		curSize += stepSize;
+		curSize += ((stepSize > 0)? stepSize : 1);
 	}
 	while (curSize <= maxValue);
 

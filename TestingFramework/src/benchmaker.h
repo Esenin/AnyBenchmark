@@ -42,6 +42,7 @@ private:
 	unsigned int makeTest();
 	void freeTestObject();
 	void createFile();
+	void startLogging();
 	void putToFile(int const param, double const &average);
 	void closeFile();
 };
