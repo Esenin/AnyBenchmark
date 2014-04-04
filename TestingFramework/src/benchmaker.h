@@ -29,11 +29,16 @@ public:
 	//! @arg mustLog switches mode of logging to file
 	void setLogginToFile(bool const &mustLog);
 
+	//! @arg name is prefix of filename with tests result
+	//! must be called After setting new runnable object
+	void setBenchmarkName(QString const &name);
+
 private:
 	bool mLogToFile;
 	int mRoundsCount;
 	TestObject *mTestObj;
 	QFile *mLogger;
+	QString mBenchmarkName;
 
 	//! makes preparation before- and cleaning after test
 	//! @return time per test in msec

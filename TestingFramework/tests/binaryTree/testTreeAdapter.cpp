@@ -9,6 +9,7 @@ TestTreeAdapter::TestTreeAdapter(TreeType const type)
 	, mNormal(nullptr)
 	, mInputSize(0)
 	, mTreeType(type)
+	, mOffset(0)
 
 {
 }
@@ -23,6 +24,7 @@ TestTreeAdapter::~TestTreeAdapter()
 void TestTreeAdapter::setParam(int const &param)
 {
 	mInputSize = param;
+	mOffset = param / 3;
 }
 
 void TestTreeAdapter::prepare()
@@ -40,18 +42,17 @@ void TestTreeAdapter::prepare()
 			continue;
 		mInput[counter] = value;
 		mTree->insert(value);
-		mTree->insert(value + 1);
 		counter++;
 	}
 }
 
 void TestTreeAdapter::run() throw(Error)
 {
-	int const peekCount = 10000;
+	int const peekCount = 1000000;
 
 	for (int i = 0; i < peekCount; i++)
 	{
-		mTree->lookup(mInput[i % mInputSize]);
+		mTree->lookup(mInput[(mOffset + i) % mInputSize]);
 	}
 }
 
@@ -93,7 +94,7 @@ void TestTreeAdapter::createDistributer()
 		delete mNormal;
 	}
 	double const mean = maxNumber / 2;
-	double const sigma = 3.0 / 14.0 * mInputSize;
+	double const sigma = 3.0 / 15.0 * mInputSize;
 	mNormal = new std::normal_distribution<double>(mean, sigma);
 }
 

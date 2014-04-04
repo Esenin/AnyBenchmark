@@ -59,18 +59,26 @@ void treePretests()
 
 void treesBenchmark(Benchmaker &benchmark)
 {
+	int const startSize = 200 * 1000;
+	int const maxSize = 16 * 1000 * 1000;
+	int const stepSize = 200 * 1000;
+
 	treePretests();
+	benchmark.setRoundsCount(3);
 	benchmark.setRunnableObject(new TestTreeAdapter(splay));
-	benchmark.makeBenchmark(100, 1000, 50);
-	benchmark.makeBenchmark(1000, 300000, 1000);
+	benchmark.setBenchmarkName("M2-splay_only-insert");
+	benchmark.makeBenchmark(500, 10000, 500);
+	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 
 	benchmark.setRunnableObject(new TestTreeAdapter(b));
-	benchmark.makeBenchmark(100, 1000, 50);
-	benchmark.makeBenchmark(1000, 300000, 1000);
+	benchmark.setBenchmarkName("M-btree16");
+	benchmark.makeBenchmark(500, 10000, 500);
+	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 
 	benchmark.setRunnableObject(new TestTreeAdapter(vanEmdeBoas));
-	benchmark.makeBenchmark(100, 1000, 50);
-	benchmark.makeBenchmark(1000, 300000, 1000);
+	benchmark.setBenchmarkName("M-vEBoas");
+	benchmark.makeBenchmark(500, 10000, 500);
+	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 }
 
 int main()

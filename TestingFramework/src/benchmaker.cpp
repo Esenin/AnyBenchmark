@@ -34,7 +34,7 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 	}
 	startLogging();
 
-	cout << "Tests have been started\n";
+	cout << "Test\t" << mBenchmarkName.toStdString() << "\thave been started\n";
 
 	QTime startBenchmarkTime = QTime::currentTime();
 	int curSize = startValue;
@@ -73,11 +73,17 @@ void Benchmaker::setRunnableObject(TestObject *object)
 {
 	freeTestObject();
 	mTestObj = object;
+	mBenchmarkName = "";
 }
 
 void Benchmaker::setLogginToFile(bool const &mustLog)
 {
 	mLogToFile = mustLog;
+}
+
+void Benchmaker::setBenchmarkName(QString const &name)
+{
+	mBenchmarkName = name + "_";
 }
 
 void Benchmaker::setRoundsCount(int const &count)
@@ -119,7 +125,8 @@ void Benchmaker::freeTestObject()
 
 void Benchmaker::createFile()
 {
-	mLogger = new QFile ("multiplication_" + QTime::currentTime().toString("hh-mm-ss-zzz") + ".txt");
+	mBenchmarkName = (mBenchmarkName.count())? mBenchmarkName : "unnamed_";
+	mLogger = new QFile (mBenchmarkName + QTime::currentTime().toString("hh-mm-ss-zzz") + ".txt");
 	if (!mLogger->open(QFile::WriteOnly))
 	{
 		mLogToFile = false;

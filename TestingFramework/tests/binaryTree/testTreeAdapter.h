@@ -35,6 +35,7 @@ protected:
 	int mInputSize;
 	std::mt19937 mGenerator;
 	TreeType mTreeType;
+	int mOffset;
 
 	void freeTestArray();
 

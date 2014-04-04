@@ -62,11 +62,11 @@ void SplayTree::insertConst(unsigned long long const &key)
 SplayTree::Node* SplayTree::find(unsigned long long const &key)
 {
 	Node *curr = mRoot;
-	Node *prev = nullptr;
+//	Node *prev = nullptr;
 
 	while(curr != nullptr)
 	{
-		prev = curr;
+//		prev = curr;
 		if (curr->key < key)
 		{
 			curr = curr->right;
@@ -77,14 +77,14 @@ SplayTree::Node* SplayTree::find(unsigned long long const &key)
 		}
 		else
 		{
-			splay(curr);
+			//splay(curr);
 			return curr;
 		}
 	}
-	if (prev != nullptr)
-	{
-		splay(prev);
-	}
+//	if (prev != nullptr)
+//	{
+//		splay(prev);
+//	}
 	return nullptr;
 }
 
