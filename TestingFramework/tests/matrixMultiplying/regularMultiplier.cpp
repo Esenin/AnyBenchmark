@@ -4,7 +4,7 @@ RegularMultiplier::RegularMultiplier()
 {
 }
 
-void RegularMultiplier::run()
+void RegularMultiplier::run() throw(Error)
 {
 	multiply();
 }

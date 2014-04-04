@@ -1,9 +1,16 @@
 #include "splayTree.h"
 
+using namespace Tree;
+
 SplayTree::SplayTree()
-: mRoot(nullptr)
-, mSize(0)
+	: mRoot(nullptr)
+	, mSize(0)
 {}
+
+SplayTree::~SplayTree()
+{
+	deleteSubDetour(mRoot);
+}
 
 void SplayTree::insert(unsigned long long key)
 {
@@ -174,6 +181,18 @@ void SplayTree::zig(SplayTree::Node *x)
 		rotateLeft(x->parent);
 	}
 	mRoot = x;
+}
+
+void SplayTree::deleteSubDetour(SplayTree::Node *current)
+{
+	if (current == nullptr)
+	{
+		return;
+	}
+
+	deleteSubDetour(current->left);
+	deleteSubDetour(current->right);
+	delete current;
 }
 
 void SplayTree::splay(SplayTree::Node *x)

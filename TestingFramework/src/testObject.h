@@ -4,6 +4,8 @@
 class TestObject
 {
 public:
+	class Error{};
+
 	virtual ~TestObject() {}
 
 	//! set main param of test
@@ -13,7 +15,7 @@ public:
 	virtual void prepare() = 0;
 
 	//! actual test content must be here
-	virtual void run() = 0;
+	virtual void run() throw(Error) = 0;
 
 	//! clears after run-test
 	virtual void clear() = 0;

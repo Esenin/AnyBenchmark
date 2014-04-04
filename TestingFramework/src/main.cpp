@@ -2,7 +2,7 @@
 
 #include <climits>
 #include <iostream>
-#include <stdlib.h>
+
 using namespace std;
 
 /*#include "tests/matrixMultiplying/recursiveMultiplier.h"
@@ -27,36 +27,23 @@ void matrixBenchmark(Benchmaker &benchmark)
 	benchmark.makeBenchmark(100, 400, 100);
 }*/
 
-#include "tests/binaryTree/vanEmdeBoasTree.h"
-#include "tests/binaryTree/splayTree.h"
+#include "tests/binaryTree/testTreeAdapter.h"
+using namespace Tree;
 
 void treesBenchmark(Benchmaker &benchmark)
 {
-	SplayTree tree;
-	tree.insert(5);
-	unsigned long long const start = 199999;
-	unsigned long long const top = 200033;
+//	benchmark.setRunnableObject(new TestTreeAdapter(splay));
+//	benchmark.makeBenchmark(100, 1000, 100);
+//	benchmark.makeBenchmark(1000, 200000, 1000);
 
+	benchmark.setRunnableObject(new TestTreeAdapter(b));
+	benchmark.makeBenchmark(20, 0, 0);
+	//benchmark.makeBenchmark(1000, 200000, 1000);
 
-	for (unsigned long long i = 0; i <= 10; i++)
-	{
-		tree.insert(i);
-	}
+//	benchmark.setRunnableObject(new TestTreeAdapter(vanEmdeBoas));
+//	benchmark.makeBenchmark(100, 1000, 100);
+//	benchmark.makeBenchmark(1000, 200000, 1000);
 
-	cout << "\nsearching:\n";
-	for (unsigned long long i = 0; i <= 13; i++)
-	{
-		cout << (tree.lookup(i)? i : 777) << "\n";
-	}
-	for (unsigned long long i = start; i <= top + 10; i++)
-	{
-		cout << (tree.lookup(i)? i : 777) << "\n";
-	}
-
-	int i = 0;
-	cin >> i;
-
-	Q_UNUSED(benchmark);
 }
 
 int main()
@@ -68,5 +55,5 @@ int main()
 
 	//matrixBenchmark(benchmark);
 	treesBenchmark(benchmark);
-	//cout << sizeof(unsigned short);
+
 }

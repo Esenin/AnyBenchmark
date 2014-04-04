@@ -10,7 +10,7 @@ public:
 
 	void setParam(int const &param);
 	virtual void prepare();
-	virtual void run() = 0;
+	virtual void run() throw(Error) = 0;
 	virtual void clear();
 
 protected:

@@ -4,7 +4,7 @@ TransposedMultiplier::TransposedMultiplier()
 {
 }
 
-void TransposedMultiplier::run()
+void TransposedMultiplier::run() throw(Error)
 {
 	ArrayMaster::transpose(mB, mMatrixSize);
 	multiply();

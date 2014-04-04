@@ -16,9 +16,9 @@ SOURCES += src/main.cpp \
     tests/matrixMultiplying/matrixMultiplier.cpp \
     tests/matrixMultiplying/transposedMultiplier.cpp \
     tests/matrixMultiplying/recursiveMultiplier.cpp \
-    tests/binaryTree/vanEmdeBoasTree.cpp \
-    tests/binaryTree/iTree.cpp \
-    tests/binaryTree/splayTree.cpp
+    tests/binaryTree/splayTree.cpp \
+    tests/binaryTree/bTree.cpp \
+    tests/binaryTree/testTreeAdapter.cpp
 
 HEADERS += \
     src/benchmaker.h \
@@ -30,5 +30,7 @@ HEADERS += \
     tests/matrixMultiplying/arrayMaster.h \
     tests/binaryTree/vanEmdeBoasTree.h \
     tests/binaryTree/iTree.h \
-    tests/binaryTree/splayTree.h
+    tests/binaryTree/splayTree.h \
+    tests/binaryTree/bTree.h \
+    tests/binaryTree/testTreeAdapter.h
 

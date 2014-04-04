@@ -7,7 +7,7 @@ class RecursiveMultiplier : public MatrixMultiplier
 {
 public:
 	RecursiveMultiplier();
-	virtual void run();
+	virtual void run() throw (Error);
 protected:
 	void recMultiply(int *c, int *a, int *b, int n, int rowsize);
 };

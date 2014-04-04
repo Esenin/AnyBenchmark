@@ -4,7 +4,7 @@ RecursiveMultiplier::RecursiveMultiplier()
 {
 }
 
-void RecursiveMultiplier::run()
+void RecursiveMultiplier::run() throw(Error)
 {
 	recMultiply(mC, mA, mB, mMatrixSize, mMatrixSize);
 }

@@ -6,7 +6,7 @@ class TransposedMultiplier : public MatrixMultiplier
 {
 public:
 	TransposedMultiplier();
-	virtual void run();
+	virtual void run() throw (Error);
 protected:
 	void multiply();
 };

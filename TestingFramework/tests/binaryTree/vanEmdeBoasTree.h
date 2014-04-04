@@ -4,6 +4,8 @@
 
 #include "iTree.h"
 
+namespace Tree
+{
 //! template @class VEBoasTree is van Emde Boas Tree, container for [0, 2^K] integers
 //! implementation
 template <unsigned K>
@@ -119,3 +121,4 @@ public:
 		return (children[keyHigh] != nullptr) && (children[keyHigh]->lookup(keyLow));
 	}
 };
+}

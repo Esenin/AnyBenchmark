@@ -2,10 +2,13 @@
 
 #include "iTree.h"
 
+namespace Tree
+{
 class SplayTree : public ITree
 {
 public:
 	SplayTree();
+	virtual ~SplayTree();
 
 	void insert(unsigned long long key);
 	void insertConst(unsigned long long const &key);
@@ -41,10 +44,14 @@ private:
 	void rotateLeft(Node *x);
 	void rotateRight(Node *x);
 	void splay(Node *x);
+	inline void zig(Node *x);
 
-	Node* find(const unsigned long long &key);
+	void deleteSubDetour(Node *current);
+
+	Node* find(unsigned long long const &key);
 	Node* subtreeMinimum(Node *u);
 	Node* subtreeMaximum(Node *u);
 
-	inline void zig(Node *x);
+
 };
+}

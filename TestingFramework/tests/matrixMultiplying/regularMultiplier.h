@@ -6,7 +6,7 @@ class RegularMultiplier : public MatrixMultiplier
 {
 public:
 	RegularMultiplier();
-	virtual void run();
+	virtual void run() throw(Error);
 protected:
 	void multiply();
 };
