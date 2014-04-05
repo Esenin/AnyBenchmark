@@ -32,5 +32,7 @@ HEADERS += \
     tests/binaryTree/iTree.h \
     tests/binaryTree/splayTree.h \
     tests/binaryTree/bTree.h \
-    tests/binaryTree/testTreeAdapter.h
+    tests/binaryTree/testTreeAdapter.h \
+    tests/binaryTree/treeTestLauncher.h \
+    tests/matrixMultiplying/multiplicationTestLauncher.h
 
