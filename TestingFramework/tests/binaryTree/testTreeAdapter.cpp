@@ -94,7 +94,7 @@ void TestTreeAdapter::createDistributer()
 		delete mNormal;
 	}
 	double const mean = maxNumber / 2;
-	double const sigma = 3.0 / 15.0 * mInputSize;
+	double const sigma = 1.0 / 10.0 * mInputSize;
 	mNormal = new std::normal_distribution<double>(mean, sigma);
 }
 

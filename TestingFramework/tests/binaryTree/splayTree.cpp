@@ -77,7 +77,7 @@ SplayTree::Node* SplayTree::find(unsigned long long const &key)
 		}
 		else
 		{
-			//splay(curr);
+//			splay(curr);
 			return curr;
 		}
 	}

@@ -1,9 +1,5 @@
 #include "benchmaker.h"
 
-#include <climits>
-#include <iostream>
-
-using namespace std;
 
 /*#include "tests/matrixMultiplying/recursiveMultiplier.h"
 #include "tests/matrixMultiplying/regularMultiplier.h"
@@ -59,24 +55,24 @@ void treePretests()
 
 void treesBenchmark(Benchmaker &benchmark)
 {
-	int const startSize = 200 * 1000;
-	int const maxSize = 16 * 1000 * 1000;
-	int const stepSize = 200 * 1000;
+	int const startSize = 500 * 1000;
+	int const maxSize = 5 * 1000 * 1000;
+	int const stepSize = 500 * 1000;
 
 	treePretests();
-	benchmark.setRoundsCount(3);
+	benchmark.setRoundsCount(2);
 	benchmark.setRunnableObject(new TestTreeAdapter(splay));
-	benchmark.setBenchmarkName("M2-splay_only-insert");
+	benchmark.setBenchmarkName("splay_only-insert");
 	benchmark.makeBenchmark(500, 10000, 500);
 	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 
 	benchmark.setRunnableObject(new TestTreeAdapter(b));
-	benchmark.setBenchmarkName("M-btree16");
+	benchmark.setBenchmarkName("btree40");
 	benchmark.makeBenchmark(500, 10000, 500);
 	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 
 	benchmark.setRunnableObject(new TestTreeAdapter(vanEmdeBoas));
-	benchmark.setBenchmarkName("M-vEBoas");
+	benchmark.setBenchmarkName("vEBoas");
 	benchmark.makeBenchmark(500, 10000, 500);
 	benchmark.makeBenchmark(startSize, maxSize, stepSize);
 }
@@ -86,7 +82,7 @@ int main()
 	Benchmaker benchmark;
 
 	// uncomment this to save data to file
-	benchmark.setLogginToFile(true);
+	//benchmark.setLogginToFile(true);
 
 	//matrixBenchmark(benchmark);
 

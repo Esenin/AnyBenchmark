@@ -15,7 +15,7 @@ public:
 	bool empty() const;
 
 protected:
-	static short const pageSize = 16;
+	static short const pageSize = 40;
 	static short const pivot = pageSize / 2;
 	struct Page
 	{
