@@ -4,6 +4,7 @@
 
 namespace Tree
 {
+//! @class BTree is a pure implementation of B-Tree without any payload
 class BTree : public ITree
 {
 public:
@@ -12,9 +13,10 @@ public:
 
 	bool lookup(unsigned long long const &key);
 	void insert(unsigned long long key);
-	bool empty() const;
+	bool isEmpty() const;
 
 protected:
+	//! pageSize shows the number of element per one page-node
 	static short const pageSize = 40;
 	static short const pivot = pageSize / 2;
 	struct Page

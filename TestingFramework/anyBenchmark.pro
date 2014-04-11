@@ -4,7 +4,6 @@ CONFIG -= app_bundle
 CONFIG += qt
 
 QMAKE_CXXFLAGS += -std=c++11
-#QMAKE_CXXFLAGS -= -O1
 #QMAKE_CXXFLAGS += -O2
 
 
@@ -18,7 +17,9 @@ SOURCES += src/main.cpp \
     tests/matrixMultiplying/recursiveMultiplier.cpp \
     tests/binaryTree/splayTree.cpp \
     tests/binaryTree/bTree.cpp \
-    tests/binaryTree/testTreeAdapter.cpp
+    tests/binaryTree/testTreeAdapter.cpp \
+    tests/binaryTree/vEBLayoutBinTree.cpp \
+    tests/binaryTree/avlTree.cpp
 
 HEADERS += \
     src/benchmaker.h \
@@ -34,5 +35,7 @@ HEADERS += \
     tests/binaryTree/bTree.h \
     tests/binaryTree/testTreeAdapter.h \
     tests/binaryTree/treeTestLauncher.h \
-    tests/matrixMultiplying/multiplicationTestLauncher.h
+    tests/matrixMultiplying/multiplicationTestLauncher.h \
+    tests/binaryTree/vEBLayoutBinTree.h \
+    tests/binaryTree/avlTree.h
 

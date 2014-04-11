@@ -1,4 +1,3 @@
-#include <math.h>
 #include "testTreeAdapter.h"
 
 using namespace Tree;
@@ -44,6 +43,11 @@ void TestTreeAdapter::prepare()
 		mTree->insert(value);
 		counter++;
 	}
+
+	if (mTreeType == vebLayoutBinTree)
+	{
+		dynamic_cast<VEBLayoutBinTree*>(mTree)->buildTree();
+	}
 }
 
 void TestTreeAdapter::run() throw(Error)
@@ -83,6 +87,12 @@ void TestTreeAdapter::createTree(TreeType type)
 		break;
 	case b:
 		mTree = new BTree();
+		break;
+	case vebLayoutBinTree:
+		mTree = new VEBLayoutBinTree();
+		break;
+	case avlTree:
+		mTree = new AVLTree();
 		break;
 	}
 }

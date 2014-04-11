@@ -104,7 +104,7 @@ const unsigned long long& SplayTree::maximum()
 	return subtreeMaximum(mRoot)->key;
 }
 
-bool SplayTree::empty() const
+bool SplayTree::isEmpty() const
 {
 	return mRoot == nullptr;
 }

@@ -43,7 +43,7 @@ void BTree::insert(unsigned long long key)
 	insertFirst(key);
 }
 
-bool BTree::empty() const
+bool BTree::isEmpty() const
 {
 	return mRoot->count == 0;
 }

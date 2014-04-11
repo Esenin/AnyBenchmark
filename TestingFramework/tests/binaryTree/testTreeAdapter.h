@@ -6,17 +6,25 @@
 #include "bTree.h"
 #include "splayTree.h"
 #include "vanEmdeBoasTree.h"
+#include "vEBLayoutBinTree.h"
+#include "avlTree.h"
 
+namespace Tree
+{
 enum TreeType
 {
 	b
 	, splay
 	, vanEmdeBoas
+	, vebLayoutBinTree
+	, avlTree
 };
 
+//! @class TestTreeAdapter is a wrap of Tree for a benchmark
 class TestTreeAdapter : public TestObject
 {
 public:
+	//! @arg type select what kind of tree will be used in testing
 	TestTreeAdapter(TreeType const type);
 	virtual ~TestTreeAdapter();
 
@@ -25,7 +33,6 @@ public:
 	virtual void prepare();
 	virtual void run() throw(Error);
 	virtual void clear();
-
 
 protected:
 	unsigned long long *mInput;
@@ -43,4 +50,4 @@ protected:
 	void createDistributer();
 	void freeTree();
 };
-
+}

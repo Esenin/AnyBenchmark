@@ -4,6 +4,8 @@
 
 namespace Tree
 {
+//! @class SplayTree is binary tree, that splays on insert
+//! you can also uncomment some codelines in find method to make splay on lookup
 class SplayTree : public ITree
 {
 public:
@@ -18,7 +20,7 @@ public:
 	const unsigned long long& minimum();
 	const unsigned long long& maximum();
 
-	bool empty() const;
+	bool isEmpty() const;
 	unsigned long size() const;
 
 private:

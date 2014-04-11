@@ -7,7 +7,6 @@
 namespace Tree
 {
 //! template @class VEBoasTree is van Emde Boas Tree, container for [0, 2^K] integers
-//! implementation
 template <unsigned K>
 class VEBoasTree : public ITree
 {
@@ -42,7 +41,7 @@ public:
 		}
 	}
 
-	inline bool empty() const
+	inline bool isEmpty() const
 	{
 		return tMin == none(K);
 	}
@@ -64,7 +63,7 @@ public:
 
 	void insert(unsigned long long key)
 	{
-		if (empty())
+		if (isEmpty())
 		{
 			tMin = key;
 			tMax = key;
@@ -93,7 +92,7 @@ public:
 				children[keyHigh] = new VEBoasTree<(K >> 1)>();
 			}
 
-			if (children[keyHigh]->empty())
+			if (children[keyHigh]->isEmpty())
 			{
 				if (aux == nullptr)
 				{
@@ -108,7 +107,7 @@ public:
 
 	bool lookup(unsigned long long const &key)
 	{
-		if (empty())
+		if (isEmpty())
 		{
 			return false;
 		}

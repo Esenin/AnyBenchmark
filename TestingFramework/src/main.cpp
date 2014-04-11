@@ -4,7 +4,6 @@
 
 #include "tests/binaryTree/treeTestLauncher.h"
 
-
 int main()
 {
 	Benchmaker benchmark;

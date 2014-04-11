@@ -4,6 +4,7 @@
 class TestObject
 {
 public:
+	//! @class Error must be throwed at runtime exception while testing
 	class Error{};
 
 	virtual ~TestObject() {}
