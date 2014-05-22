@@ -2,13 +2,43 @@
 
 using namespace Tree;
 
+struct AVLTree::Node
+{
+	Type data;
+	Node *parent;
+	Node *leftChild;
+	Node *rightChild;
+	int height;
+
+	Node(Type const &key)
+		: parent(nullptr)
+		, leftChild(nullptr)
+		, rightChild(nullptr)
+		, height(0)
+	{
+		this->data = key;
+	}
+	~Node()
+	{
+		if (leftChild != nullptr)
+		{
+			delete leftChild;
+		}
+		if (rightChild != nullptr)
+		{
+			delete rightChild;
+		}
+	}
+
+	int updateHeight();
+	int getBalance();
+	Node* setLeftChild(Node* newLeft);
+	Node* setRightChild(Node* newRight);
+};
+
+
 AVLTree::AVLTree()
 	: mRoot(nullptr)
-{
-}
-
-AVLTree::AVLTree(Tree::Type key)
-	: mRoot(new Node(key))
 {
 }
 
@@ -18,7 +48,7 @@ AVLTree::~AVLTree()
 		delete mRoot;
 }
 
-void AVLTree::insert(Tree::Type key)
+void AVLTree::insert(Type const &key)
 {
 	if (mRoot == nullptr)
 	{
@@ -73,7 +103,7 @@ void AVLTree::insert(Tree::Type key)
 
 }
 
-bool AVLTree::lookup(Type const &key)
+bool AVLTree::lookup(Type const &key) const
 {
 	return (findNode(key) != nullptr);
 }
@@ -92,7 +122,7 @@ void AVLTree::setRoot(AVLTree::Node *node)
 	}
 }
 
-AVLTree::Node *AVLTree::findNode(Type key)
+AVLTree::Node *AVLTree::findNode(Type key) const
 {
 	Node* temp = mRoot;
 	while(temp != nullptr)

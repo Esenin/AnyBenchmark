@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QtCore/QList>
-#include <QtCore/QSet>
+#include <vector>
+#include <algorithm>
 
 #include "iTree.h"
 
 namespace Tree
 {
-typedef unsigned long long Type;
 //! @class VEBLayoutBinTree is a modification of AVL-like binary tree
 //! implementation idea: each node has also children of host-key
 //! that must decrease number of cachemisses
@@ -17,11 +16,12 @@ public:
 	VEBLayoutBinTree();
 	~VEBLayoutBinTree();
 
-	void insert(unsigned long long key);
-	bool lookup(unsigned long long const &key);
+	void insert(Type const &key);
+	bool lookup(Type const &key) const;
 	bool isEmpty() const;
 	//! Builds the tree from inputted  values due hastily implementation of "insert" method
-	void buildTree();
+	virtual void buildTree();
+	virtual bool isBuildable() const;
 
 protected:
 	enum ChildIndex
@@ -64,10 +64,10 @@ protected:
 	};
 
 	Page *mRoot;
-	QList<Type> mData;
+	std::vector<Type> mData;
 
 	void makeSubTree(Page* &locRoot, int const leftBound, int const rightBound);
-	bool findIn(Page *subTree, Type const &key);
+	bool findIn(Page *subTree, Type const &key) const;
 };
 }
 

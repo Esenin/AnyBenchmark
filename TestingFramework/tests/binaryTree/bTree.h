@@ -8,44 +8,51 @@ namespace Tree
 class BTree : public ITree
 {
 public:
-	BTree();
+	explicit BTree(unsigned int const &size = 40);
 	virtual ~BTree();
 
-	bool lookup(unsigned long long const &key);
-	void insert(unsigned long long key);
+	bool lookup(Type const &key) const;
+	void insert(Type const &key);
 	bool isEmpty() const;
 
 protected:
+	static int const binSearchBound = 20;
 	//! pageSize shows the number of element per one page-node
-	static short const pageSize = 40;
-	static short const pivot = pageSize / 2;
+	int const mPageSize;
+	int const mPivot;
 	struct Page
 	{
-		short count;
+		int count;
 		bool isLeaf;
-		Page* children[pageSize];
-		unsigned long long keys[pageSize];
+		Page* *children;
+		Type *keys;
 
-
-		Page()
+		Page(int const &size)
 			: count(0)
 			, isLeaf(true)
 
 		{
-			for (short i = 0; i < pageSize; i++)
+			children = new Page*[size];
+			keys = new Type[size];
+			for (int i = 0; i < size; i++)
 			{
 				children[i] = nullptr;
 			}
+		}
+		~Page()
+		{
+			delete[] keys;
+			delete[] children;
 		}
 
 	};
 
 	Page *mRoot;
 
-	bool lookupRec(Page *localRoot, unsigned long long const &key);
-	void insertFirst(unsigned long long const &key);
-	void insertNonFull(Page *host, unsigned long long const &key);
-	void splitChild(Page *host, short const index);
+	bool lookupRec(Page *localRoot, Type const &key) const;
+	void insertFirst(Type const &key);
+	void insertNonFull(Page *host, Type const &key);
+	void splitChild(Page *host, int const &index);
 	void deleteSubDetour(Page *current);
 };
 

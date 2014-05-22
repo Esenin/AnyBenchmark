@@ -34,7 +34,8 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 	}
 	startLogging();
 
-	cout << "Test\t" << mBenchmarkName.toStdString() << "\thave been started\n";
+	cout << "Test\t" << mBenchmarkName.toStdString() << "\thave been started, from "
+			<< startValue << " to " << ((maxValue > startValue)? maxValue : startValue) << endl;
 
 	QTime startBenchmarkTime = QTime::currentTime();
 	int curSize = startValue;
@@ -45,7 +46,15 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
 		double average = 0;
 		for (int i = 0; i < mRoundsCount; i++)
 		{
-			average += makeRound(curSize);
+			try
+			{
+				average += makeRound(curSize);
+			}
+			catch (TestObject::Error &)
+			{
+				cout << "Test-subject\'s behavior is wrong. \nBreak\n";
+				break;
+			}
 		}
 		average /= mRoundsCount;
 

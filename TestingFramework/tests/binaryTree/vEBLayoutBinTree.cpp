@@ -12,26 +12,34 @@ VEBLayoutBinTree::~VEBLayoutBinTree()
 	delete mRoot;
 }
 
-void VEBLayoutBinTree::insert(unsigned long long key)
+void VEBLayoutBinTree::insert(Type const &key)
 {
-	mData.append(key);
+	mData.push_back(key);
 }
 
-bool VEBLayoutBinTree::lookup(unsigned long long const &key)
+bool VEBLayoutBinTree::lookup(Type const &key) const
 {
 	return findIn(mRoot, key);
 }
 
 bool VEBLayoutBinTree::isEmpty() const
 {
-	return mData.isEmpty();
+	return mData.empty();
 }
 
 void VEBLayoutBinTree::buildTree()
 {
-	mData = mData.toSet().toList();
-	qSort(mData);
+	if (isEmpty())
+	{
+		return;
+	}
+	std::sort(mData.begin(), mData.end());
 	makeSubTree(mRoot, 0, mData.size() - 1);
+}
+
+bool VEBLayoutBinTree::isBuildable() const
+{
+	return true;
 }
 
 void VEBLayoutBinTree::makeSubTree(VEBLayoutBinTree::Page* &locRoot, int const leftBound, int const rightBound)
@@ -87,7 +95,7 @@ void VEBLayoutBinTree::makeSubTree(VEBLayoutBinTree::Page* &locRoot, int const l
 	}
 }
 
-bool VEBLayoutBinTree::findIn(VEBLayoutBinTree::Page *subTree, Type const &key)
+bool VEBLayoutBinTree::findIn(VEBLayoutBinTree::Page *subTree, Type const &key) const
 {
 	if (subTree == nullptr)
 	{

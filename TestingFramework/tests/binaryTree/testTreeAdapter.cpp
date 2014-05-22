@@ -3,90 +3,80 @@
 using namespace Tree;
 
 TestTreeAdapter::TestTreeAdapter(TreeType const type)
-	: mInput(nullptr)
-	, mTree(nullptr)
+	: mTree(nullptr)
 	, mNormal(nullptr)
 	, mInputSize(0)
-	, mTreeType(type)
 	, mOffset(0)
-
+	, mTreeParam(40)
+	, mTreeType(type)
 {
+	mGenerator.seed(std::time(0));
+}
+
+TestTreeAdapter::TestTreeAdapter(int const &bTreeSize)
+	: TestTreeAdapter(TreeType::b)
+{
+	mTreeParam = bTreeSize;
 }
 
 TestTreeAdapter::~TestTreeAdapter()
 {
 	freeTree();
-	freeTestArray();
 	delete mNormal;
 }
 
 void TestTreeAdapter::setParam(int const &param)
 {
 	mInputSize = param;
-	mOffset = param / 3;
+	mOffset = mInputSize / 2;
 }
 
 void TestTreeAdapter::prepare()
 {
 	createTree(mTreeType);
 	createDistributer();
-	mInput = new unsigned long long[mInputSize];
+	std::thread requestFilling(&TestTreeAdapter::createRequests, this);
 
-	unsigned long long value = 0;
-	int counter = 0;
-	while (counter < mInputSize)
+	long long leftPointer = 0;
+	long long rightPointer = mInputSize - 1;
+	while (rightPointer - leftPointer >= 0)
 	{
-		value = static_cast<unsigned long long>((*mNormal)(mGenerator));
-		if (value > maxNumber - 1)
-			continue;
-		mInput[counter] = value;
-		mTree->insert(value);
-		counter++;
+		mTree->insert(leftPointer++);
+		mTree->insert(rightPointer--);
 	}
 
-	if (mTreeType == vebLayoutBinTree)
+	if (mTree->isBuildable())
 	{
-		dynamic_cast<VEBLayoutBinTree*>(mTree)->buildTree();
+		mTree->buildTree();
 	}
+
+	requestFilling.join();
 }
 
 void TestTreeAdapter::run() throw(Error)
 {
 	int const peekCount = 1000000;
-
 	for (int i = 0; i < peekCount; i++)
 	{
-		mTree->lookup(mInput[(mOffset + i) % mInputSize]);
+		if (!mTree->lookup(mRequests[i % mInputSize]))
+		{
+			throw Error();
+		}
 	}
 }
 
 void TestTreeAdapter::clear()
 {
 	freeTree();
-	freeTestArray();
-}
-
-void TestTreeAdapter::freeTestArray()
-{
-	if (mInput != nullptr)
-	{
-		delete[] mInput;
-		mInput = nullptr;
-	}
+	mRequests.clear();
 }
 
 void TestTreeAdapter::createTree(TreeType type)
 {
 	switch (type)
 	{
-	case splay:
-		mTree = new SplayTree();
-		break;
-	case vanEmdeBoas:
-		mTree = new VEBoasTree<32>();
-		break;
 	case b:
-		mTree = new BTree();
+		mTree = new BTree(mTreeParam);
 		break;
 	case vebLayoutBinTree:
 		mTree = new VEBLayoutBinTree();
@@ -94,6 +84,8 @@ void TestTreeAdapter::createTree(TreeType type)
 	case avlTree:
 		mTree = new AVLTree();
 		break;
+	case stdRBTree:
+		mTree = new StlMap();
 	}
 }
 
@@ -103,9 +95,17 @@ void TestTreeAdapter::createDistributer()
 	{
 		delete mNormal;
 	}
-	double const mean = maxNumber / 2;
-	double const sigma = 1.0 / 10.0 * mInputSize;
+	double const mean = mInputSize / 2;
+	double const sigma = 2 * std::log(mean);
 	mNormal = new std::normal_distribution<double>(mean, sigma);
+}
+
+void TestTreeAdapter::createRequests()
+{
+	for (int i = 0; i < mInputSize; i++)
+	{
+		mRequests.push_back(static_cast<long long>((*mNormal)(mGenerator)));
+	}
 }
 
 void TestTreeAdapter::freeTree()
