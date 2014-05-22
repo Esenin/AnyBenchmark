@@ -16,7 +16,7 @@ public:
 	bool isEmpty() const;
 
 protected:
-	static int const binSearchBound = 20;
+	static int const binSearchBound = 2000;
 	//! pageSize shows the number of element per one page-node
 	int const mPageSize;
 	int const mPivot;
@@ -55,7 +55,5 @@ protected:
 	void splitChild(Page *host, int const &index);
 	void deleteSubDetour(Page *current);
 };
-
-
 
 }

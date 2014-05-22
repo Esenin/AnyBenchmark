@@ -45,7 +45,7 @@ protected:
 	int mTreeParam;
 	std::mt19937 mGenerator;
 	TreeType mTreeType;
-	std::vector<long long> mRequests;
+	std::vector<Type> mRequests;
 
 	void createTree(TreeType type);
 	void createDistributer();

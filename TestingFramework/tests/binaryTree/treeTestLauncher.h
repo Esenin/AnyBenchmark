@@ -47,14 +47,14 @@ void treePretests()
 //! that is a benchmark config
 void makeBenchmarkSet(Benchmaker &benchmark, TestTreeAdapter *tree, QString const &name = QString(""))
 {
-	int const startSize = 20 * 1000 * 1000;
-	int const maxSize = 4 * 1000 * 1000;
+	int const startSize = 5 * 1000 * 1000;
+	int const maxSize = 30 * 1000 * 1000;
 	int const stepSize = 5 * 1000 * 1000;
 
 	benchmark.setRunnableObject(tree);
 	benchmark.setBenchmarkName(name);
-	//benchmark.makeBenchmark(2000, 10000, 2000);
-	benchmark.makeBenchmark(startSize, maxSize, stepSize);
+	benchmark.makeBenchmark(startSize, startSize, 0);
+	//benchmark.makeBenchmark(startSize, maxSize, stepSize);
 }
 
 //! Complect of trees for performance test
@@ -62,7 +62,7 @@ void treesBenchmark(Benchmaker &benchmark)
 {
 	treePretests();
 
-	benchmark.setRoundsCount(3);
+	benchmark.setRoundsCount(5);
 
 	makeBenchmarkSet(benchmark, new TestTreeAdapter(Tree::b), "btree40");
 
@@ -76,17 +76,15 @@ void treesBenchmark(Benchmaker &benchmark)
 void bTreeParamTuning(Benchmaker &benchmark)
 {
 	treePretests();
-	benchmark.setRoundsCount(3);
+	benchmark.setRoundsCount(5);
 
-	makeBenchmarkSet(benchmark, new TestTreeAdapter(Tree::vebLayoutBinTree), "AVL-L");
+	makeBenchmarkSet(benchmark, new TestTreeAdapter(32), "btree32");
 
-	//makeBenchmarkSet(benchmark, new TestTreeAdapter(10), "btree10");
+	makeBenchmarkSet(benchmark, new TestTreeAdapter(64), "btree64");
 
-	//makeBenchmarkSet(benchmark, new TestTreeAdapter(20), "btree20");
+	makeBenchmarkSet(benchmark, new TestTreeAdapter(96), "btree96");
 
-	//makeBenchmarkSet(benchmark, new TestTreeAdapter(40), "btree40");
+	makeBenchmarkSet(benchmark, new TestTreeAdapter(128), "btree128");
 
-	//makeBenchmarkSet(benchmark, new TestTreeAdapter(100), "btree100");
-
-	//makeBenchmarkSet(benchmark, new TestTreeAdapter(1000), "btree1000");
+	makeBenchmarkSet(benchmark, new TestTreeAdapter(160), "btree160");
 }

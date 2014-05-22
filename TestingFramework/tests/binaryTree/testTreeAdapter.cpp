@@ -37,8 +37,8 @@ void TestTreeAdapter::prepare()
 	createDistributer();
 	std::thread requestFilling(&TestTreeAdapter::createRequests, this);
 
-	long long leftPointer = 0;
-	long long rightPointer = mInputSize - 1;
+	Type leftPointer = 0;
+	Type rightPointer = mInputSize - 1;
 	while (rightPointer - leftPointer >= 0)
 	{
 		mTree->insert(leftPointer++);
@@ -96,15 +96,16 @@ void TestTreeAdapter::createDistributer()
 		delete mNormal;
 	}
 	double const mean = mInputSize / 2;
-	double const sigma = 2 * std::log(mean);
+	double const sigma = std::sqrt(mean) * std::log(mean);
 	mNormal = new std::normal_distribution<double>(mean, sigma);
 }
 
 void TestTreeAdapter::createRequests()
 {
-	for (int i = 0; i < mInputSize; i++)
+	for (Type i = 0; i < mInputSize; i++)
 	{
-		mRequests.push_back(static_cast<long long>((*mNormal)(mGenerator)));
+		//mRequests.push_back(i);
+		mRequests.push_back(static_cast<Type>((*mNormal)(mGenerator)));
 	}
 }
 
