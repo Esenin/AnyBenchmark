@@ -6,20 +6,26 @@
 #include <thread>
 #include <vector>
 
+//#include <QDebug>
+
 #include "../../src/testObject.h"
 #include "bTree.h"
-#include "vEBLayoutBinTree.h"
+#include "advancedAvlTree.h"
 #include "avlTree.h"
 #include "stlMap.h"
+#include "vebLayout.h"
+#include "splayTreeWrap.h"
 
 namespace Tree
 {
 enum TreeType
 {
 	b
-	, vebLayoutBinTree
+	, advancedAvlTree
 	, avlTree
 	, stdRBTree
+	, vebLayoutTree
+	, splay
 };
 
 //! @class TestTreeAdapter is a wrap of Tree for a benchmark

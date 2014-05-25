@@ -2,6 +2,8 @@
 
 #include "iTree.h"
 
+#include <vector>
+
 namespace Tree
 {
 //! @class AVLTree is a classic simple implementation of avl binary tree
@@ -17,10 +19,13 @@ public:
 
 	bool isEmpty() const;
 
+	void clear();
+
 protected:
 	struct Node;
 
 	Node *mRoot;
+	int mSize;
 
 	void setRoot(Node *node);
 	int height();

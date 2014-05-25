@@ -1,5 +1,7 @@
 #include "avlTree.h"
 
+#include <queue>
+
 using namespace Tree;
 
 struct AVLTree::Node
@@ -39,6 +41,7 @@ struct AVLTree::Node
 
 AVLTree::AVLTree()
 	: mRoot(nullptr)
+	, mSize(0)
 {
 }
 
@@ -53,6 +56,7 @@ void AVLTree::insert(Type const &key)
 	if (mRoot == nullptr)
 	{
 		mRoot = new Node(key);
+		++mSize;
 		return;
 	}
 
@@ -66,6 +70,7 @@ void AVLTree::insert(Type const &key)
 			if (temp->leftChild == nullptr)
 			{
 				added_node = temp->setLeftChild(new Node(key));
+				++mSize;
 				break;
 			}
 			else
@@ -79,6 +84,7 @@ void AVLTree::insert(Type const &key)
 			if (temp->rightChild == nullptr)
 			{
 				added_node = temp->setRightChild(new Node(key));
+				++mSize;
 				break;
 			}
 			else
@@ -100,7 +106,6 @@ void AVLTree::insert(Type const &key)
 		balanceAtNode(temp);
 		temp = temp->parent;
 	}
-
 }
 
 bool AVLTree::lookup(Type const &key) const
@@ -110,7 +115,14 @@ bool AVLTree::lookup(Type const &key) const
 
 bool AVLTree::isEmpty() const
 {
-	return mRoot == nullptr;
+	return mSize > 0;
+}
+
+void AVLTree::clear()
+{
+	if (!isEmpty())
+		delete mRoot;
+	mRoot = nullptr;
 }
 
 void AVLTree::setRoot(AVLTree::Node *node)

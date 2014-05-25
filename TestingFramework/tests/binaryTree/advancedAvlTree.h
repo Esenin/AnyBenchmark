@@ -10,11 +10,11 @@ namespace Tree
 //! @class VEBLayoutBinTree is a modification of AVL-like binary tree
 //! implementation idea: each node has also children of host-key
 //! that must decrease number of cachemisses
-class VEBLayoutBinTree : public ITree
+class AdvancedAvlTree : public ITree
 {
 public:
-	VEBLayoutBinTree();
-	~VEBLayoutBinTree();
+	AdvancedAvlTree();
+	~AdvancedAvlTree();
 
 	void insert(Type const &key);
 	bool lookup(Type const &key) const;

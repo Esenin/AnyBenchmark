@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 namespace Tree
 {
 //! singleshot change of type. In research purpose templates don't necessary

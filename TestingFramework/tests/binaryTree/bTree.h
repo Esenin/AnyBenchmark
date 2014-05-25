@@ -23,9 +23,9 @@ protected:
 	struct Page
 	{
 		int count;
+		Type *keys;
 		bool isLeaf;
 		Page* *children;
-		Type *keys;
 
 		Page(int const &size)
 			: count(0)

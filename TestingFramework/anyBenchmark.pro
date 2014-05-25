@@ -30,9 +30,12 @@ SOURCES += src/main.cpp \
     tests/matrixMultiplying/recursiveMultiplier.cpp \
     tests/binaryTree/bTree.cpp \
     tests/binaryTree/testTreeAdapter.cpp \
-    tests/binaryTree/vEBLayoutBinTree.cpp \
     tests/binaryTree/avlTree.cpp \
-    tests/binaryTree/stlMap.cpp
+    tests/binaryTree/stlMap.cpp \
+    tests/binaryTree/vebLayout.cpp \
+    tests/binaryTree/advancedAvlTree.cpp \
+    tests/binaryTree/vebFunc/vanemdeboas.cpp \
+    tests/binaryTree/splayTreeWrap.cpp
 
 HEADERS += \
     src/benchmaker.h \
@@ -47,7 +50,13 @@ HEADERS += \
     tests/binaryTree/testTreeAdapter.h \
     tests/binaryTree/treeTestLauncher.h \
     tests/matrixMultiplying/multiplicationTestLauncher.h \
-    tests/binaryTree/vEBLayoutBinTree.h \
     tests/binaryTree/avlTree.h \
-    tests/binaryTree/stlMap.h
+    tests/binaryTree/stlMap.h \
+    tests/binaryTree/vebLayout.h \
+    tests/binaryTree/advancedAvlTree.h \
+    tests/binaryTree/vebFunc/vanemdeboas.h \
+    tests/binaryTree/splayTree/splayTree.h \
+    tests/binaryTree/splayTreeWrap.h
+
+OTHER_FILES +=
 

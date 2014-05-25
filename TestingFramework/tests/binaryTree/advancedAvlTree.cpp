@@ -1,33 +1,33 @@
-#include "vEBLayoutBinTree.h"
+#include "advancedAvlTree.h"
 
 using namespace Tree;
 
-Tree::VEBLayoutBinTree::VEBLayoutBinTree()
+Tree::AdvancedAvlTree::AdvancedAvlTree()
 	: mRoot(nullptr)
 {
 }
 
-VEBLayoutBinTree::~VEBLayoutBinTree()
+AdvancedAvlTree::~AdvancedAvlTree()
 {
 	delete mRoot;
 }
 
-void VEBLayoutBinTree::insert(Type const &key)
+void AdvancedAvlTree::insert(Type const &key)
 {
 	mData.push_back(key);
 }
 
-bool VEBLayoutBinTree::lookup(Type const &key) const
+bool AdvancedAvlTree::lookup(Type const &key) const
 {
 	return findIn(mRoot, key);
 }
 
-bool VEBLayoutBinTree::isEmpty() const
+bool AdvancedAvlTree::isEmpty() const
 {
 	return mData.empty();
 }
 
-void VEBLayoutBinTree::buildTree()
+void AdvancedAvlTree::buildTree()
 {
 	if (isEmpty())
 	{
@@ -37,12 +37,12 @@ void VEBLayoutBinTree::buildTree()
 	makeSubTree(mRoot, 0, mData.size() - 1);
 }
 
-bool VEBLayoutBinTree::isBuildable() const
+bool AdvancedAvlTree::isBuildable() const
 {
 	return true;
 }
 
-void VEBLayoutBinTree::makeSubTree(VEBLayoutBinTree::Page* &locRoot, int const leftBound, int const rightBound)
+void AdvancedAvlTree::makeSubTree(AdvancedAvlTree::Page* &locRoot, int const leftBound, int const rightBound)
 {
 	locRoot = new Page();
 	if (mRoot == nullptr)
@@ -95,7 +95,7 @@ void VEBLayoutBinTree::makeSubTree(VEBLayoutBinTree::Page* &locRoot, int const l
 	}
 }
 
-bool VEBLayoutBinTree::findIn(VEBLayoutBinTree::Page *subTree, Type const &key) const
+bool AdvancedAvlTree::findIn(AdvancedAvlTree::Page *subTree, Type const &key) const
 {
 	if (subTree == nullptr)
 	{

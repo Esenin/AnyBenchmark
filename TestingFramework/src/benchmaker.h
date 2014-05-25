@@ -3,6 +3,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QList>
 #include <QtCore/QTime>
+#include <QtCore/QThread>
+
 #include <iostream>
 
 #include "testObject.h"

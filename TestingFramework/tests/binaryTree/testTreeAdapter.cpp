@@ -10,7 +10,8 @@ TestTreeAdapter::TestTreeAdapter(TreeType const type)
 	, mTreeParam(40)
 	, mTreeType(type)
 {
-	mGenerator.seed(std::time(0));
+	int const seed = 2014;
+	mGenerator.seed(seed);
 }
 
 TestTreeAdapter::TestTreeAdapter(int const &bTreeSize)
@@ -78,14 +79,25 @@ void TestTreeAdapter::createTree(TreeType type)
 	case b:
 		mTree = new BTree(mTreeParam);
 		break;
-	case vebLayoutBinTree:
-		mTree = new VEBLayoutBinTree();
+	case advancedAvlTree:
+		mTree = new AdvancedAvlTree();
 		break;
 	case avlTree:
 		mTree = new AVLTree();
 		break;
 	case stdRBTree:
 		mTree = new StlMap();
+		break;
+	case vebLayoutTree:
+		mTree = new VebLayoutTree();
+		break;
+	case splay:
+		mTree = new SplayTreeWrap();
+		break;
+	default:
+	{
+		throw std::runtime_error("unexpected tree type");
+	}
 	}
 }
 
@@ -95,18 +107,34 @@ void TestTreeAdapter::createDistributer()
 	{
 		delete mNormal;
 	}
+	double const tenPercentCovering = 0.354;
 	double const mean = mInputSize / 2;
-	double const sigma = std::sqrt(mean) * std::log(mean);
+	int const radius = mInputSize / 3 * 2;
+	double const sigma = std::sqrt(radius) * std::sqrt(tenPercentCovering * std::sqrt(radius));
 	mNormal = new std::normal_distribution<double>(mean, sigma);
 }
 
 void TestTreeAdapter::createRequests()
 {
+//	Type min = mInputSize;
+//	Type max = -mInputSize;
 	for (Type i = 0; i < mInputSize; i++)
 	{
-		//mRequests.push_back(i);
-		mRequests.push_back(static_cast<Type>((*mNormal)(mGenerator)));
+		Type current = static_cast<Type>((*mNormal)(mGenerator));
+
+		//Type current = lrand48() % mInputSize;
+//		if (current > mInputSize)
+//			current = mInputSize - 1;
+//		if (current < 0)
+//			current = 0;
+		mRequests.push_back(current);
+//		if (current < min)
+//			min = current;
+//		if (current > max)
+//			max = current;
 	}
+//	qDebug() << "from" << min << "to " << max << "\t rate" << QString::number(double(max - min) / mInputSize, 'f')
+//			<< "% c" << mInputSize;
 }
 
 void TestTreeAdapter::freeTree()

@@ -105,7 +105,9 @@ unsigned int Benchmaker::makeRound(int const &paramN)
 	mTestObj->setParam(paramN);
 	mTestObj->prepare();
 
+	QThread::msleep(333);
 	unsigned int result = makeTest();
+	QThread::msleep(333);
 
 	mTestObj->clear();
 
