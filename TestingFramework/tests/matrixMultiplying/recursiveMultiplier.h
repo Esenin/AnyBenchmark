@@ -6,9 +6,9 @@
 class RecursiveMultiplier : public MatrixMultiplier
 {
 public:
-	RecursiveMultiplier();
-	virtual void run() throw (Error);
+    RecursiveMultiplier();
+    virtual void run();
 protected:
-	void recMultiply(int *c, int *a, int *b, int n, int rowsize);
+    void recMultiply(int *c, int *a, int *b, int n, int rowsize);
 };
 

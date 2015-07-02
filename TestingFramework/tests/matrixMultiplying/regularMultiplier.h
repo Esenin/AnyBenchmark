@@ -5,10 +5,10 @@
 class RegularMultiplier : public MatrixMultiplier
 {
 public:
-	RegularMultiplier();
-	virtual void run() throw(Error);
+    RegularMultiplier();
+    virtual void run();
 protected:
-	void multiply();
+    void multiply();
 };
 
 

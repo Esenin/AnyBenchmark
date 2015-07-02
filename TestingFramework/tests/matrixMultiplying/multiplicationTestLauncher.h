@@ -4,20 +4,20 @@
 #include "tests/matrixMultiplying/regularMultiplier.h"
 #include "tests/matrixMultiplying/transposedMultiplier.h"
 
-void matrixBenchmark(Benchmaker &benchmark)
+void matrixBenchmark(Benchmark::Benchmaker &benchmark)
 {
-	benchmark.setRoundsCount(5);
-	// Regular multiplying
-	benchmark.setRunnableObject(new RegularMultiplier);
-	benchmark.makeBenchmark(100, 400, 100);  // (100, 1000, 50) looks interesting
+    benchmark.setRoundsCount(5);
+    // Regular multiplying
+    benchmark.setRunnableObject(new RegularMultiplier);
+    benchmark.makeBenchmark(100, 400, 100);  // (100, 1000, 50) looks interesting
 
-	// recursive: onlt for 2^N matrix
-	benchmark.setRunnableObject(new RecursiveMultiplier);
-	benchmark.makeBenchmark(128, 0, 0);
-	benchmark.makeBenchmark(256, 0, 0);
-	benchmark.makeBenchmark(512, 0, 0);
+    // recursive: onlt for 2^N matrix
+    benchmark.setRunnableObject(new RecursiveMultiplier);
+    benchmark.makeBenchmark(128, 0, 0);
+    benchmark.makeBenchmark(256, 0, 0);
+    benchmark.makeBenchmark(512, 0, 0);
 
-	// transposed
-	benchmark.setRunnableObject(new TransposedMultiplier);
-	benchmark.makeBenchmark(100, 400, 100);
+    // transposed
+    benchmark.setRunnableObject(new TransposedMultiplier);
+    benchmark.makeBenchmark(100, 400, 100);
 }

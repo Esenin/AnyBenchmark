@@ -5,19 +5,19 @@
 class MatrixMultiplier : public TestObject
 {
 public:
-	MatrixMultiplier();
-	virtual ~MatrixMultiplier();
+    MatrixMultiplier();
+    virtual ~MatrixMultiplier();
 
-	void setParam(int const &param);
-	virtual void prepare();
-	virtual void run() throw(Error) = 0;
-	virtual void clear();
+    void setParam(int const &param);
+    virtual void prepare();
+    virtual void run() = 0;
+    virtual void clear();
 
 protected:
-	int mMatrixSize;
-	int *mA;
-	int *mB;
-	int *mC;
+    int mMatrixSize;
+    int *mA;
+    int *mB;
+    int *mC;
 };
 
 
