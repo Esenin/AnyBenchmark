@@ -11,7 +11,6 @@ namespace Benchmark
 class FileWriter : public IEventHandler
 {
 public:
-
     FileWriter();
     ~FileWriter();
 
@@ -20,12 +19,12 @@ protected:
 
 private:
     FileOutput mOutputFormat;
-    std::string mBenchmarkName;
+    std::string mFilename;
     std::fstream mLogger;
 
     void printHumanReadable(RoundSeriesFinishedEvent const *e);
     void printInCSV(RoundSeriesFinishedEvent const *e);
-    void openFile(std::string const &filename);
+    void openFile();
     void closeFile();
 };
 

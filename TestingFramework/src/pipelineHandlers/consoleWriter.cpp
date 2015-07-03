@@ -1,49 +1,63 @@
 #include "consoleWriter.h"
+#include <math.h>
 
 using namespace Benchmark;
+using std::cout;
+using std::endl;
 
 void ConsoleWriter::handleHook(BenchmarkEvent const &e)
 {
-    /*cout << "Test\t" << mBenchmarkName << "\thas been started, from "
-            << startValue << " to " << ((maxValue > startValue)? maxValue : startValue) << endl;*/
-
-    /*cout << "N = " << mainParam
-                << "\tAverage time is " << average << " [ms], \tTime for round: " << roundInSecs<< " [s]" << endl;*/
-
-    /*cout << "Benchmark already done! Total time: " << totalTimeSecs
-            << " seconds (" << (double)totalTimeSecs / 60 << " minutes)\n\n";*/
-
-    /*cout << "\n Tests result stored at: " << mResultsFilename << endl << endl;*/
-
-
     switch (e.type)
     {
-    case BenchmarkEvent::EventType::reconfiguration:
+        case BenchmarkEvent::EventType::reconfiguration:
+        {
+            auto config = dynamic_cast<const ReconfigurationEvent *>(&e);
+            mBenchmarkName = config->benchmarkName;
+            mLogFilename = config->logFileName;
+            mOutputFormat = config->fileOutputFormat;
+            break;
+        }
+        case BenchmarkEvent::EventType::benchmarkStarted:
+        {
+            cout << "Test\t" << mBenchmarkName << "\thas been started" << endl;
+            mBenchStartedTime = std::chrono::high_resolution_clock::now();
+            break;
+        }
+        case BenchmarkEvent::EventType::roundSeriesStarted:
+        {
+            mRoundStartedTime = std::chrono::high_resolution_clock::now();
+            break;
+        }
+        case BenchmarkEvent::EventType::roundSeriesFinished:
+        {
+            auto result = dynamic_cast<const RoundSeriesFinishedEvent *>(&e);
 
-        break;
-    case BenchmarkEvent::EventType::benchmarkStarted:
-        auto startBenchmarkTime = std::chrono::high_resolution_clock::now();
+            auto roundInSecs = std::chrono::duration_cast<std::chrono::seconds>(
+                    std::chrono::high_resolution_clock::now() - mRoundStartedTime).count();
 
-
-        break;
-    case BenchmarkEvent::EventType::roundSeriesStarted:
-        auto startRoundTime = std::chrono::high_resolution_clock::now();
-
-        break;
-    case BenchmarkEvent::EventType::roundSeriesFinished:
-        auto roundInSecs = std::chrono::duration_cast<std::chrono::seconds>(
-                    std::chrono::high_resolution_clock::now() - startRoundTime).count();
-
-        break;
-    case BenchmarkEvent::EventType::benchmarkFinished:
-        auto stopBenchmarkTime = std::chrono::high_resolution_clock::now();
-        auto totalTimeSecs =
-                std::chrono::duration_cast<std::chrono::seconds>(stopBenchmarkTime - startBenchmarkTime).count();
-        break;
-    case BenchmarkEvent::EventType::benchmarkCrashed:
-
-        break;
-    default:
-        break;
+            cout << "N = " << result->param << "\tAverage time is " << result->milliseconds
+                                                                       << " [ms], \tTime for round: " << roundInSecs << " [s]" << endl;
+            break;
+        }
+        case BenchmarkEvent::EventType::benchmarkFinished:
+        {
+            auto const stopBenchmarkTime = std::chrono::high_resolution_clock::now();
+            auto const totalTimeSecs =
+                    std::chrono::duration_cast<std::chrono::seconds>(stopBenchmarkTime - mBenchStartedTime).count();
+            auto const minutes = (double) totalTimeSecs / 60;
+            auto const hours = minutes / 60;
+            cout << "Benchmark already done! Total time: " << totalTimeSecs << " seconds ("
+                 << minutes << " minutes)\n";
+            if (hours > 1.5)
+            {
+                cout << "It's about " << round(hours) << " hours!\n";
+            }
+            if (mOutputFormat != FileOutput::none)
+                cout << "Benchmark results are stored @ " << mLogFilename << "\n";
+            cout << endl;
+            break;
+        }
+        case BenchmarkEvent::EventType::benchmarkCrashed:
+            break;
     }
 }

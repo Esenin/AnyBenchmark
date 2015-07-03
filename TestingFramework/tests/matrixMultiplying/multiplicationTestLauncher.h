@@ -1,8 +1,8 @@
 #pragma once
 
-#include "tests/matrixMultiplying/recursiveMultiplier.h"
-#include "tests/matrixMultiplying/regularMultiplier.h"
-#include "tests/matrixMultiplying/transposedMultiplier.h"
+#include "recursiveMultiplier.h"
+#include "regularMultiplier.h"
+#include "transposedMultiplier.h"
 
 void matrixBenchmark(Benchmark::Benchmaker &benchmark)
 {

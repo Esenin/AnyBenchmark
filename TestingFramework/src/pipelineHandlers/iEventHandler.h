@@ -1,22 +1,29 @@
 #pragma once
 
+#include <memory>
+
+#include "benchmarkEvent.h"
+
 namespace Benchmark
 {
+
+class IEventHandler;
+typedef std::unique_ptr<IEventHandler> UniqueEventHandler;
 
 class IEventHandler
 {
 public:
     virtual ~IEventHandler() {}
 
-    void setNextHandler(UniqueResultHandler &&handler)
+    void setNextHandler(UniqueEventHandler &&handler)
     {
         if (mNextHandler)
-            mNextHandler->setNextHandler(std::forward<UniqueResultHandler>(handler));
+            mNextHandler->setNextHandler(std::forward<UniqueEventHandler>(handler));
         else
             mNextHandler = std::move(handler);
     }
 
-    void handle(ResultEvent const &results)
+    void handle(BenchmarkEvent const &results)
     {
         handleHook(results);
         if (mNextHandler)
@@ -24,10 +31,10 @@ public:
     }
 
 protected:
-    virtual void handleHook(ResultEvent const &results) = 0;
+    virtual void handleHook(BenchmarkEvent const &results) = 0;
 
 private:
-    UniqueResultHandler mNextHandler;
+    UniqueEventHandler mNextHandler;
 };
 
 } // Benchmark

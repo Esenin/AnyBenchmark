@@ -28,7 +28,7 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
     do
     {
         mPipeline.emitEvent(RoundSeriesStartedEvent(mainParam));
-        double average = 0;
+        long double average = 0;
         for (int i = 0; i < mRoundsCount; i++)
         {
             try
@@ -52,10 +52,6 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
     mPipeline.emitEvent(BenchmarkFinishedEvent());
 
 
-
-
-
-
 }
 
 void Benchmaker::setRunnableObject(ITestObject *object)
@@ -67,7 +63,7 @@ void Benchmaker::setRunnableObject(ITestObject *object)
 
 void Benchmaker::setLogginToFile(FileOutput const format)
 {
-    mLogToFile = format;
+    mFileFormat = format;
 }
 
 void Benchmaker::setBenchmarkName(std::string const &name)
@@ -82,13 +78,13 @@ void Benchmaker::setRoundsCount(unsigned int const &count)
     mRoundsCount = count;
 }
 
-unsigned int Benchmaker::makeRound(int const &paramN)
+long Benchmaker::makeRound(int const &paramN)
 {
     mTestObj->setParam(paramN);
     mTestObj->prepare();
 
     std::this_thread::sleep_for(std::chrono::milliseconds( 10 )); // invalidate CPU's pipeline and flush cache
-    unsigned int result = makeTest();
+    long result = makeTest();
     std::this_thread::sleep_for(std::chrono::milliseconds( 10 ));
 
     mTestObj->clear();
@@ -96,7 +92,7 @@ unsigned int Benchmaker::makeRound(int const &paramN)
     return result;
 }
 
-unsigned int Benchmaker::makeTest()
+long Benchmaker::makeTest()
 {
     auto startTime = std::chrono::high_resolution_clock::now();
 

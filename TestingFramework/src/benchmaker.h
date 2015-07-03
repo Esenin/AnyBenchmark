@@ -50,9 +50,9 @@ private:
 
     //! makes preparation before- and cleaning after test
     //! @return time per test in msec
-    unsigned int makeRound(int const &paramN);
+    long makeRound(int const &paramN);
     //! runs single test
-    unsigned int makeTest();
+    long makeTest();
 
     void configureBenchmark();
     void freeTestObject();

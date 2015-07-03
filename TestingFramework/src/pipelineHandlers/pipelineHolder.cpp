@@ -1,26 +1,28 @@
 #include "pipelineHolder.h"
 
+using namespace Benchmark;
+
 PipelineHolder::PipelineHolder()
 {
+
 }
 
-
-Benchmark::PipelineHolder::~PipelineHolder()
+PipelineHolder::~PipelineHolder()
 {
 
 }
 
-void Benchmark::PipelineHolder::appendHandler(Benchmark::UniqueResultHandler handler)
+void PipelineHolder::appendHandler(UniqueEventHandler handler)
 {
 
 }
 
-void Benchmark::PipelineHolder::emitEvent(BenchmarkEvent const &event)
+void PipelineHolder::emitEvent(BenchmarkEvent const &event)
 {
 
 }
 
-void Benchmark::PipelineHolder::resetPipeline()
+void PipelineHolder::resetPipeline()
 {
 
 }

@@ -1,12 +1,17 @@
 #pragma once
 
-
 namespace Benchmark
 {
 
+enum class FileOutput
+{
+    none = 0
+    , humanReadable = 1
+    , csv = 2
+};
+
 struct BenchmarkEvent
 {
-    virtual ~BenchmarkEvent() {}
     enum class EventType
     {
         reconfiguration
@@ -15,9 +20,13 @@ struct BenchmarkEvent
         , roundSeriesFinished
         , benchmarkFinished
         , benchmarkCrashed
-    } type;
-};
+    };
 
+    BenchmarkEvent(EventType eventType) : type(eventType) {}
+    virtual ~BenchmarkEvent() {}
+
+    EventType type;
+};
 
 struct ReconfigurationEvent : public BenchmarkEvent
 {
@@ -29,44 +38,45 @@ struct ReconfigurationEvent : public BenchmarkEvent
 
     ReconfigurationEvent(std::string const &name, std::string const &filename, int roundCount
                          , bool hasBeenTestObjectChanched, FileOutput fileOutputFormat)
-        : type(EventType::reconfiguration)
-        , benchmarkName(name)
-        , logFileName(filename)
-        , roundCount(roundCount)
-        , hasBeenTestObjectChanched(hasBeenTestObjectChanched)
-        , fileOutputFormat(fileOutputFormat) {}
+            : BenchmarkEvent(EventType::reconfiguration)
+            , benchmarkName(name)
+            , logFileName(filename)
+            , roundCount(roundCount)
+            , hasBeenTestObjectChanched(hasBeenTestObjectChanched)
+            , fileOutputFormat(fileOutputFormat) {}
 };
 
 struct BenchmarkStartedEvent : public BenchmarkEvent
 {
-    BenchmarkStartedEvent() : type(EventType::benchmarkStarted) {}
+    BenchmarkStartedEvent() : BenchmarkEvent(EventType::benchmarkStarted) {}
 };
 
 struct RoundSeriesStartedEvent : public BenchmarkEvent
 {
     int const param;
-    RoundSeriesStartedEvent(int param) : type(EventType::roundSeriesStarted), param(param) {}
+    RoundSeriesStartedEvent(int param) : BenchmarkEvent(EventType::roundSeriesStarted), param(param) {}
 };
 
 struct RoundSeriesFinishedEvent : public BenchmarkEvent
 {
     int const param;
-    double const milliseconds;
-    RoundSeriesFinishedEvent(int const &param, double const &ms) :
-        type(EventType::roundSeriesFinished)
-      , param(param)
-      , milliseconds(ms) {}
+    long double const milliseconds;
+
+    RoundSeriesFinishedEvent(int const &param, long double const &ms) :
+            BenchmarkEvent(EventType::roundSeriesFinished)
+            , param(param)
+            , milliseconds(ms) {}
 };
 
 
 struct BenchmarkFinishedEvent : public BenchmarkEvent
 {
-    BenchmarkFinishedEvent() : type(EventType::benchmarkFinished) {}
+    BenchmarkFinishedEvent() : BenchmarkEvent(EventType::benchmarkFinished) {}
 };
 
 struct BenchmarkCrashedEvent : public BenchmarkEvent
 {
-    BenchmarkCrashedEvent() : type(EventType::benchmarkCrashed) {}
+    BenchmarkCrashedEvent() : BenchmarkEvent(EventType::benchmarkCrashed) {}
 };
 
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <chrono>
 
 #include "iEventHandler.h"
@@ -15,7 +16,12 @@ protected:
     virtual void handleHook(BenchmarkEvent const &e);
 private:
     std::string mBenchmarkName;
+    std::string mLogFilename;
     FileOutput mOutputFormat;
+
+    typedef decltype(std::chrono::high_resolution_clock::now()) TimePoint;
+
+    TimePoint mBenchStartedTime, mRoundStartedTime;
 };
 
 }

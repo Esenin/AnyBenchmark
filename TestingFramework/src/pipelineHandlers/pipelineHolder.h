@@ -8,15 +8,6 @@
 namespace Benchmark
 {
 
-enum class FileOutput
-{
-    none = 0
-    , humanReadable = 1
-    , csv = 2
-};
-
-typedef std::unique_ptr<IEventHandler> UniqueEventHandler;
-
 class PipelineHolder
 {
 public:
@@ -30,7 +21,7 @@ public:
     void resetPipeline();
 
 private:
-    UniqueResultHandler headOfChain;
+    UniqueEventHandler headOfChain;
 };
 
 

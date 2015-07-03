@@ -3,15 +3,16 @@
 
 #include "benchmaker.h"
 
+#include "../tests/matrixMultiplying/multiplicationTestLauncher.h"
 
-#include "tests/matrixMultiplying/multiplicationTestLauncher.h"
 int main()
 {
     Benchmark::Benchmaker benchmark;
 
     //uncomment this to save data to file
-    benchmark.setLogginToFile(true);
+    benchmark.setLogginToFile(Benchmark::FileOutput::none);
 
     matrixBenchmark(benchmark);
 
+    return 0;
 }
