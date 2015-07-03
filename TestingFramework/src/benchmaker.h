@@ -1,11 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <thread>
 
-#include "testObject.h"
+#include "iTestObject.h"
+#include "pipelineHandlers/pipelineHolder.h"
+#include "pipelineHandlers/consoleWriter.h"
+#include "pipelineHandlers/fileWriter.h"
 
 namespace Benchmark
 {
@@ -21,7 +23,7 @@ public:
     void setRoundsCount(unsigned int const &count = 10);
 
     //! @arg object is a subject that will be tested
-    void setRunnableObject(TestObject *object);
+    void setRunnableObject(ITestObject *object);
 
     //! start benchmark on given object
     //! @arg startValue is start param "N"
@@ -30,7 +32,7 @@ public:
     void makeBenchmark(int const &startValue = 200, int const &maxValue = 1400, int const &stepSize = 50);
 
     //! @arg mustLog switches mode of logging to file
-    void setLogginToFile(bool const &mustLog);
+    void setLogginToFile(FileOutput const format);
 
     //! @arg name is prefix of filename with tests result
     //! must be called After setting new runnable object
@@ -38,24 +40,23 @@ public:
 
 
 private:
-    bool mLogToFile;
+    FileOutput mFileFormat;
     int mRoundsCount;
-    TestObject *mTestObj;
-    std::fstream mLogger;
     std::string mBenchmarkName;
     std::string mResultsFilename;
+    ITestObject *mTestObj;
+    PipelineHolder mPipeline;
+
 
     //! makes preparation before- and cleaning after test
     //! @return time per test in msec
     unsigned int makeRound(int const &paramN);
     //! runs single test
     unsigned int makeTest();
+
+    void configureBenchmark();
     void freeTestObject();
-    void createFile();
     std::string getTimeString();
-    void startLogging();
-    void putToFile(int const param, double const &average);
-    void closeFile();
 };
 
-}
+} // Benchmark

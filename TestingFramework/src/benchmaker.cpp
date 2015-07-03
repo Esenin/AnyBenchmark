@@ -5,44 +5,29 @@ using std::endl;
 using namespace Benchmark;
 
 Benchmaker::Benchmaker()
-    : mLogToFile(false)
+    : mFileFormat(FileOutput::none)
     , mRoundsCount(10)
     , mTestObj(nullptr)
 {
+    mPipeline.appendHandler(UniqueEventHandler(new ConsoleWriter()));
+    mPipeline.appendHandler(UniqueEventHandler(new FileWriter()));
 }
 
 Benchmaker::~Benchmaker()
 {
     freeTestObject();
-}
-
-void Benchmaker::startLogging()
-{
-    if (mLogToFile)
-    {
-        createFile();
-        mLogger << "N (main param), Average time[ms]:\n";
-    }
+    mPipeline.resetPipeline();
 }
 
 void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int const &stepSize)
 {
-    if (!mTestObj)
-    {
-        cout << "Set test object first!\n";
-        return;
-    }
-    startLogging();
+    configureBenchmark();
+    mPipeline.emitEvent(BenchmarkStartedEvent());
 
-    cout << "Test\t" << mBenchmarkName << "\thas been started, from "
-            << startValue << " to " << ((maxValue > startValue)? maxValue : startValue) << endl;
-
-    auto startBenchmarkTime = std::chrono::high_resolution_clock::now();
     int mainParam = startValue;
-
     do
     {
-        auto startRoundTime = std::chrono::high_resolution_clock::now();
+        mPipeline.emitEvent(RoundSeriesStartedEvent(mainParam));
         double average = 0;
         for (int i = 0; i < mRoundsCount; i++)
         {
@@ -58,42 +43,31 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
             }
         }
         average /= mRoundsCount;
+        mPipeline.emitEvent(RoundSeriesFinishedEvent(mainParam, average));
 
-        if (mLogToFile)
-        {
-            putToFile(mainParam, average);
-        }
-
-        auto roundInSecs = std::chrono::duration_cast<std::chrono::seconds>(
-                    std::chrono::high_resolution_clock::now() - startRoundTime).count();
-
-        cout << "N = " << mainParam
-                << "\tAverage time is " << average << " [ms], \tTime for round: " << roundInSecs<< " [s]" << endl;
         mainParam += ((stepSize > 0)? stepSize : 1);
     }
     while (mainParam <= maxValue);
 
-    auto stopBenchmarkTime = std::chrono::high_resolution_clock::now();
-    auto totalTimeSecs =
-            std::chrono::duration_cast<std::chrono::seconds>(stopBenchmarkTime - startBenchmarkTime).count();
+    mPipeline.emitEvent(BenchmarkFinishedEvent());
 
 
-    cout << "Benchmark already done! Total time: " << totalTimeSecs
-            << " seconds (" << (double)totalTimeSecs / 60 << " minutes)\n\n";
 
-    closeFile();
+
+
+
 }
 
-void Benchmaker::setRunnableObject(TestObject *object)
+void Benchmaker::setRunnableObject(ITestObject *object)
 {
     freeTestObject();
     mTestObj = object;
     mBenchmarkName = "";
 }
 
-void Benchmaker::setLogginToFile(bool const &mustLog)
+void Benchmaker::setLogginToFile(FileOutput const format)
 {
-    mLogToFile = mustLog;
+    mLogToFile = format;
 }
 
 void Benchmaker::setBenchmarkName(std::string const &name)
@@ -113,7 +87,7 @@ unsigned int Benchmaker::makeRound(int const &paramN)
     mTestObj->setParam(paramN);
     mTestObj->prepare();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds( 10 )); // invalidate pipeline and flush cache
+    std::this_thread::sleep_for(std::chrono::milliseconds( 10 )); // invalidate CPU's pipeline and flush cache
     unsigned int result = makeTest();
     std::this_thread::sleep_for(std::chrono::milliseconds( 10 ));
 
@@ -132,25 +106,30 @@ unsigned int Benchmaker::makeTest()
     return std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
 }
 
+void Benchmaker::configureBenchmark()
+{
+    static ITestObject *prevObjectPtr = nullptr;
+    if (!mTestObj)
+    {
+        throw std::invalid_argument("Set test object first!\n");
+    }
+
+    mResultsFilename = ((mBenchmarkName.size())? mBenchmarkName : "unnamed_") + getTimeString()
+            + "(v" +std::to_string(rand() % 1000) + ").txt";
+
+    mPipeline.emitEvent(ReconfigurationEvent(mBenchmarkName, mResultsFilename, mRoundsCount,
+                                             (prevObjectPtr == mTestObj), mFileFormat));
+
+    prevObjectPtr = mTestObj;
+}
+
 void Benchmaker::freeTestObject()
 {
     delete mTestObj;
     mTestObj = nullptr;
 }
 
-void Benchmaker::createFile()
-{
-    mResultsFilename = ((mBenchmarkName.size())? mBenchmarkName : "unnamed_") + getTimeString()
-            + "(v" +std::to_string(rand() % 1000) + ").txt";
 
-    mLogger.open(mResultsFilename, std::ios_base::out | std::ios_base::trunc);
-
-    if (!mLogger.is_open())
-    {
-        mLogToFile = false;
-        throw std::runtime_error("Cannot open file: " + mResultsFilename);
-    }
-}
 
 std::string Benchmaker::getTimeString()
 {
@@ -165,20 +144,6 @@ std::string Benchmaker::getTimeString()
         timeStr = timeStr.substr(0, charUsed);
 
     return timeStr;
-}
-
-void Benchmaker::putToFile(int const param, double const &average)
-{
-    mLogger << std::to_string(param) << "\t" << std::to_string(average) << endl;
-}
-
-void Benchmaker::closeFile()
-{
-    if (!mLogger.is_open())
-        return;
-
-    cout << "\n Tests result stored at: " << mResultsFilename << endl << endl;
-    mLogger.close();
 }
 
 

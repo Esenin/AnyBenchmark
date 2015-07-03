@@ -15,6 +15,7 @@
 
 *.user
 Makefile*
+bin/*
 TestingFramework/debug/*
 TestingFramework/release/*
 multiplication_*.txt

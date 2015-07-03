@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += static
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++14
 #QMAKE_CXXFLAGS += -O2
 
 CONFIG(debug, debug | release) {
@@ -28,17 +28,25 @@ SOURCES += src/main.cpp \
     tests/matrixMultiplying/matrixMultiplier.cpp \
     tests/matrixMultiplying/transposedMultiplier.cpp \
     tests/matrixMultiplying/recursiveMultiplier.cpp \
+    src/pipelineHandlers/fileWriter.cpp \
+    src/pipelineHandlers/consoleWriter.cpp \
+    src/pipelineHandlers/pipelineHolder.cpp
 
 
 HEADERS += \
     src/benchmaker.h \
-    src/testObject.h \
     tests/matrixMultiplying/regularMultiplier.h \
     tests/matrixMultiplying/matrixMultiplier.h \
     tests/matrixMultiplying/transposedMultiplier.h \
     tests/matrixMultiplying/recursiveMultiplier.h \
     tests/matrixMultiplying/arrayMaster.h \
     tests/matrixMultiplying/multiplicationTestLauncher.h \
+    src/iTestObject.h \
+    src/pipelineHandlers/fileWriter.h \
+    src/pipelineHandlers/consoleWriter.h \
+    src/pipelineHandlers/pipelineHolder.h \
+    src/pipelineHandlers/benchmarkEvent.h \
+    src/pipelineHandlers/iEventHandler.h
 
 
 OTHER_FILES +=
