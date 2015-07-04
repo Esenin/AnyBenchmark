@@ -1,14 +1,12 @@
 #pragma once
 
-#include <iostream>
-#include <ostream>
 #include <chrono>
-#include <math.h>
 
 #include "iEventHandler.h"
-#include "pipelineHolder.h"
 
-namespace Benchmark
+namespace benchmark
+{
+namespace impl
 {
 
 class ConsoleWriter : public IEventHandler
@@ -16,6 +14,7 @@ class ConsoleWriter : public IEventHandler
 public:
 protected:
     virtual void handleHook(BenchmarkEvent const &e);
+
 private:
     std::string mBenchmarkName;
     std::string mLogFilename;
@@ -28,4 +27,4 @@ private:
 };
 
 }
-
+}

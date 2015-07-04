@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Benchmark
+namespace benchmark
 {
 //! @class TestObject is an interface for objects taking part in benchmark
 class ITestObject
@@ -21,4 +21,4 @@ public:
     virtual void clear() = 0;
 };
 
-} // Benchmark
+} // benchmark

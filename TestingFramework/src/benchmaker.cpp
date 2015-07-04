@@ -1,13 +1,22 @@
-#include "benchmaker.h"
+#include "../include/benchmaker.h"
+#include <iostream>
+#include <thread>
+
+#include "../src/pipelineHandlers/consoleWriter.h"
+#include "../src/pipelineHandlers/fileWriter.h"
 
 using std::cout;
 using std::endl;
-using namespace Benchmark;
+using namespace benchmark;
+using namespace benchmark::impl;
+
+bool const hasNext = true;
 
 Benchmaker::Benchmaker()
     : mFileFormat(FileOutput::none)
     , mRoundsCount(10)
     , mTestObj(nullptr)
+    , mParamGenerator([]() { return std::make_pair(false, 0); })
 {
     mPipeline.appendHandler(UniqueEventHandler(new ConsoleWriter()));
     mPipeline.appendHandler(UniqueEventHandler(new FileWriter()));
@@ -19,14 +28,15 @@ Benchmaker::~Benchmaker()
     mPipeline.resetPipeline();
 }
 
-void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int const &stepSize)
+void Benchmaker::makeBenchmark()
 {
     configureBenchmark();
     mPipeline.emitEvent(BenchmarkStartedEvent());
 
-    int mainParam = startValue;
-    do
+    std::pair<bool, int> nextArg;
+    while ((nextArg = mParamGenerator()).first == hasNext)
     {
+        int mainParam = nextArg.second;
         mPipeline.emitEvent(RoundSeriesStartedEvent(mainParam));
         long double average = 0;
         for (int i = 0; i < mRoundsCount; i++)
@@ -37,17 +47,15 @@ void Benchmaker::makeBenchmark(int const &startValue, int const &maxValue, int c
             }
             catch (std::exception &e)
             {
-                cout << "Test-subject\'s behavior is wrong. \nBreak\n"
-                     << "cause: " << e.what() << endl;
-                break;
+                mPipeline.emitEvent(BenchmarkCrashedEvent(e.what()));
+                throw e;
             }
         }
         average /= mRoundsCount;
         mPipeline.emitEvent(RoundSeriesFinishedEvent(mainParam, average));
 
-        mainParam += ((stepSize > 0)? stepSize : 1);
     }
-    while (mainParam <= maxValue);
+
 
     mPipeline.emitEvent(BenchmarkFinishedEvent());
 
@@ -124,8 +132,6 @@ void Benchmaker::freeTestObject()
     mTestObj = nullptr;
 }
 
-
-
 std::string Benchmaker::getTimeString()
 {
     size_t const bufLen = 20;
@@ -142,3 +148,69 @@ std::string Benchmaker::getTimeString()
 }
 
 
+void Benchmaker::setTestingParam(int x)
+{
+    mParamGenerator = [x] ()
+    {
+        static bool isUsed = false;
+        if (!isUsed)
+        {
+            isUsed = true;
+            return std::make_pair(hasNext, x);
+        }
+        else
+        {
+            isUsed = false; // clear flag
+            return std::make_pair(!hasNext, 0);
+        }
+    };
+}
+
+void Benchmaker::setTestingParam(int from, int to, int step)
+{
+    mParamGenerator = [from, to, step] ()
+    {
+        static int lastVal = 0;
+        static bool isUsed = false;
+        if (isUsed)
+        {
+            lastVal += step;
+            if (lastVal > to)
+            {
+                isUsed = false; // clear
+                return std::make_pair(!hasNext, 0);
+            }
+        }
+        else
+        {
+            lastVal = from;
+            isUsed = true;
+        }
+        return std::make_pair(hasNext, lastVal);
+    };
+}
+
+void Benchmaker::setTestingParam(std::initializer_list<int> list)
+{
+    mParamList.clear();
+    mParamList.reserve(list.size());
+    for (int const &x : list)
+        mParamList.push_back(x);
+    mParamGenerator = [this] ()
+    {
+        static int idx = 0;
+        if (idx < mParamList.size())
+            return std::make_pair(hasNext, mParamList[idx++]);
+        else
+        {
+            idx = 0;
+            mParamList.clear();
+            return std::make_pair(!hasNext, 0);
+        }
+    };
+}
+
+void Benchmaker::setTestingParam(Benchmaker::ParamGenerator paramYielder)
+{
+    mParamGenerator = paramYielder;
+}

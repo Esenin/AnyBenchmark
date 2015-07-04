@@ -15,9 +15,9 @@ set(SOURCE_FILES
     src/pipelineHandlers/pipelineHolder.cpp
     src/pipelineHandlers/pipelineHolder.h
     src/benchmaker.cpp
-    src/benchmaker.h
-    src/iTestObject.h
     src/main.cpp
+    include/benchmaker.h
+    include/iTestObject.h
     tests/matrixMultiplying/arrayMaster.h
     tests/matrixMultiplying/matrixMultiplier.cpp
     tests/matrixMultiplying/matrixMultiplier.h

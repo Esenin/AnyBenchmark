@@ -3,9 +3,10 @@
 #include <fstream>
 
 #include "iEventHandler.h"
-#include "pipelineHolder.h"
 
-namespace Benchmark
+namespace benchmark
+{
+namespace impl
 {
 
 class FileWriter : public IEventHandler
@@ -23,9 +24,13 @@ private:
     std::fstream mLogger;
 
     void printHumanReadable(RoundSeriesFinishedEvent const *e);
+
     void printInCSV(RoundSeriesFinishedEvent const *e);
+
     void openFile();
+
     void closeFile();
 };
 
+}
 }

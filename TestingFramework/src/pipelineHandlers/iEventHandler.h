@@ -4,16 +4,19 @@
 
 #include "benchmarkEvent.h"
 
-namespace Benchmark
+namespace benchmark
 {
 
+namespace impl
+{
 class IEventHandler;
 typedef std::unique_ptr<IEventHandler> UniqueEventHandler;
 
 class IEventHandler
 {
 public:
-    virtual ~IEventHandler() {}
+    virtual ~IEventHandler()
+    { }
 
     void setNextHandler(UniqueEventHandler &&handler)
     {
@@ -37,5 +40,6 @@ private:
     UniqueEventHandler mNextHandler;
 };
 
-} // Benchmark
+}
+} // benchmark
 

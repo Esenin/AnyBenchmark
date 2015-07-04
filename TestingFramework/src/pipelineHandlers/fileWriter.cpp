@@ -1,6 +1,6 @@
 #include "fileWriter.h"
 
-using namespace Benchmark;
+using namespace benchmark::impl;
 using std::endl;
 
 FileWriter::FileWriter()

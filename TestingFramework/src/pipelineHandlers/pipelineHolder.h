@@ -1,11 +1,11 @@
 #pragma once
 
-#include <memory>
-
 #include "benchmarkEvent.h"
 #include "iEventHandler.h"
 
-namespace Benchmark
+namespace benchmark
+{
+namespace impl
 {
 
 class PipelineHolder
@@ -24,6 +24,6 @@ private:
     UniqueEventHandler mHeadOfChain;
 };
 
-
+}
 }
 

@@ -2,9 +2,8 @@
 
 #include <string>
 
-namespace Benchmark
+namespace benchmark
 {
-
 enum class FileOutput
 {
     none = 0
@@ -12,6 +11,8 @@ enum class FileOutput
     , csv = 2
 };
 
+namespace impl
+{
 struct BenchmarkEvent
 {
     enum class EventType
@@ -24,8 +25,11 @@ struct BenchmarkEvent
         , benchmarkCrashed
     };
 
-    BenchmarkEvent(EventType eventType) : type(eventType) {}
-    virtual ~BenchmarkEvent() {}
+    BenchmarkEvent(EventType eventType) : type(eventType)
+    { }
+
+    virtual ~BenchmarkEvent()
+    { }
 
     EventType type;
 };
@@ -46,18 +50,21 @@ struct ReconfigurationEvent : public BenchmarkEvent
             , roundCount(roundCount)
             , hasBeenTestObjectChanched(hasBeenTestObjectChanched)
             , fileOutputFormat(fileOutputFormat)
-    {}
+    { }
 };
 
 struct BenchmarkStartedEvent : public BenchmarkEvent
 {
-    BenchmarkStartedEvent() : BenchmarkEvent(EventType::benchmarkStarted) {}
+    BenchmarkStartedEvent() : BenchmarkEvent(EventType::benchmarkStarted)
+    { }
 };
 
 struct RoundSeriesStartedEvent : public BenchmarkEvent
 {
     int const param;
-    RoundSeriesStartedEvent(int param) : BenchmarkEvent(EventType::roundSeriesStarted), param(param) {}
+
+    RoundSeriesStartedEvent(int param) : BenchmarkEvent(EventType::roundSeriesStarted), param(param)
+    { }
 };
 
 struct RoundSeriesFinishedEvent : public BenchmarkEvent
@@ -66,22 +73,26 @@ struct RoundSeriesFinishedEvent : public BenchmarkEvent
     long double const milliseconds;
 
     RoundSeriesFinishedEvent(int const &param, long double const &ms) :
-            BenchmarkEvent(EventType::roundSeriesFinished)
-            , param(param)
-            , milliseconds(ms) {}
+            BenchmarkEvent(EventType::roundSeriesFinished), param(param), milliseconds(ms)
+    { }
 };
 
 
 struct BenchmarkFinishedEvent : public BenchmarkEvent
 {
-    BenchmarkFinishedEvent() : BenchmarkEvent(EventType::benchmarkFinished) {}
+    BenchmarkFinishedEvent() : BenchmarkEvent(EventType::benchmarkFinished)
+    { }
 };
 
 struct BenchmarkCrashedEvent : public BenchmarkEvent
 {
-    BenchmarkCrashedEvent() : BenchmarkEvent(EventType::benchmarkCrashed) {}
+    std::string cause;
+
+    BenchmarkCrashedEvent(std::string cause)
+            : BenchmarkEvent(EventType::benchmarkCrashed), cause(cause)
+    { }
 };
 
 
-
+}
 }

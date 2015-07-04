@@ -1,8 +1,8 @@
 #pragma once
-#include "../../src/iTestObject.h"
+#include "../../include/iTestObject.h"
 #include "arrayMaster.h"
 
-class MatrixMultiplier : public Benchmark::ITestObject
+class MatrixMultiplier : public benchmark::ITestObject
 {
 public:
     MatrixMultiplier();

@@ -1,6 +1,8 @@
 #include "consoleWriter.h"
+#include <iostream>
+#include <math.h>
 
-using namespace Benchmark;
+using namespace benchmark::impl;
 using std::cout;
 using std::endl;
 
@@ -47,18 +49,20 @@ void ConsoleWriter::handleHook(BenchmarkEvent const &e)
                     std::chrono::duration_cast<std::chrono::seconds>(stopBenchmarkTime - mBenchStartedTime).count();
             auto const minutes = (double) totalTimeSecs / 60;
             auto const hours = minutes / 60;
-            cout << "Benchmark already done! Total time: " << totalTimeSecs << " seconds ("
+            cout << "benchmark already done! Total time: " << totalTimeSecs << " seconds ("
                  << minutes << " minutes)\n";
             if (hours > 1.5)
             {
                 cout << "It's about " << round(hours) << " hours!\n";
             }
             if (mOutputFormat != FileOutput::none)
-                cout << "Benchmark results are stored @ " << mLogFilename << "\n";
+                cout << "benchmark results are stored @ " << mLogFilename << "\n";
             cout << endl;
             break;
         }
         case BenchmarkEvent::EventType::benchmarkCrashed:
+            auto crashEvent = dynamic_cast<const BenchmarkCrashedEvent *>(&e);
+            cout << "benchmark has been crashed. What(): " << crashEvent->cause << endl;
             break;
     }
 }

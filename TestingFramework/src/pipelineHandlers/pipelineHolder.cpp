@@ -1,6 +1,6 @@
 #include "pipelineHolder.h"
 
-using namespace Benchmark;
+using namespace benchmark::impl;
 
 PipelineHolder::~PipelineHolder()
 {

@@ -1,16 +1,16 @@
 //! @author Ivan Senin (Esenin)
 //! @brief Example of usage AnyBenchmark tool
 
-#include "benchmaker.h"
+#include "../include/benchmaker.h"
 
 #include "../tests/matrixMultiplying/multiplicationTestLauncher.h"
 
 int main()
 {
-    Benchmark::Benchmaker benchmark;
+    benchmark::Benchmaker benchmark;
 
     //uncomment this to save data to file
-    benchmark.setLogginToFile(Benchmark::FileOutput::none);
+    benchmark.setLogginToFile(benchmark::FileOutput::none);
 
     matrixBenchmark(benchmark);
 
