@@ -11,17 +11,17 @@ namespace Benchmark
 class PipelineHolder
 {
 public:
-    PipelineHolder();
+    PipelineHolder() = default;
     ~PipelineHolder();
 
-    void appendHandler(UniqueEventHandler handler);
+    void appendHandler(UniqueEventHandler &&handler);
 
     void emitEvent(BenchmarkEvent const &event);
 
     void resetPipeline();
 
 private:
-    UniqueEventHandler headOfChain;
+    UniqueEventHandler mHeadOfChain;
 };
 
 

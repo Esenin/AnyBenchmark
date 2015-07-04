@@ -58,7 +58,6 @@ void Benchmaker::setRunnableObject(ITestObject *object)
 {
     freeTestObject();
     mTestObj = object;
-    mBenchmarkName = "";
 }
 
 void Benchmaker::setLogginToFile(FileOutput const format)

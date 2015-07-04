@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Benchmark
 {
 
@@ -43,7 +45,8 @@ struct ReconfigurationEvent : public BenchmarkEvent
             , logFileName(filename)
             , roundCount(roundCount)
             , hasBeenTestObjectChanched(hasBeenTestObjectChanched)
-            , fileOutputFormat(fileOutputFormat) {}
+            , fileOutputFormat(fileOutputFormat)
+    {}
 };
 
 struct BenchmarkStartedEvent : public BenchmarkEvent

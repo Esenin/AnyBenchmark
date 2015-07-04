@@ -25,7 +25,8 @@ void FileWriter::handleHook(BenchmarkEvent const &e)
             break;
         }
         case BenchmarkEvent::EventType::benchmarkStarted:
-            openFile();
+            if (mOutputFormat != FileOutput::none)
+                openFile();
             break;
 
         case BenchmarkEvent::EventType::roundSeriesFinished:
@@ -46,7 +47,8 @@ void FileWriter::handleHook(BenchmarkEvent const &e)
         }
         case BenchmarkEvent::EventType::benchmarkCrashed:
         case BenchmarkEvent::EventType::benchmarkFinished:
-            closeFile();
+            if (mOutputFormat != FileOutput::none)
+                closeFile();
             break;
         default:
             break;
@@ -57,7 +59,7 @@ void FileWriter::handleHook(BenchmarkEvent const &e)
 
 void FileWriter::printHumanReadable(RoundSeriesFinishedEvent const *e)
 {
-    mLogger << std::to_string(e->param) << "\t" << std::to_string(e->milliseconds) << endl;
+    mLogger << std::to_string(e->param) << "\t\t" << std::to_string(e->milliseconds) << endl;
 }
 
 void FileWriter::printInCSV(RoundSeriesFinishedEvent const *e)

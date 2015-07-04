@@ -1,5 +1,4 @@
 #include "consoleWriter.h"
-#include <math.h>
 
 using namespace Benchmark;
 using std::cout;
@@ -15,11 +14,13 @@ void ConsoleWriter::handleHook(BenchmarkEvent const &e)
             mBenchmarkName = config->benchmarkName;
             mLogFilename = config->logFileName;
             mOutputFormat = config->fileOutputFormat;
+            mRoundsCount = config->roundCount;
             break;
         }
         case BenchmarkEvent::EventType::benchmarkStarted:
         {
-            cout << "Test\t" << mBenchmarkName << "\thas been started" << endl;
+            cout << "Test\t" << mBenchmarkName << "\thas been started"
+                 << "\t(Using " << mRoundsCount << " to get average time)" << endl;
             mBenchStartedTime = std::chrono::high_resolution_clock::now();
             break;
         }
@@ -36,7 +37,7 @@ void ConsoleWriter::handleHook(BenchmarkEvent const &e)
                     std::chrono::high_resolution_clock::now() - mRoundStartedTime).count();
 
             cout << "N = " << result->param << "\tAverage time is " << result->milliseconds
-                                                                       << " [ms], \tTime for round: " << roundInSecs << " [s]" << endl;
+                                                                       << " [ms], \t\tTime for round: " << roundInSecs << " [s]" << endl;
             break;
         }
         case BenchmarkEvent::EventType::benchmarkFinished:
