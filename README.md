@@ -1,6 +1,8 @@
 AnyBenchmark
 =======================
 
-Abstract platform for testing performance of algos and data-structures
+Framework for testing performance of algos and data-structures
 
-Lang: C++/Qt
+Lang: C++ (STL only)
+
+UPD. Project closed. Please consider use [Google Benchmark] (https://github.com/google/benchmark)
