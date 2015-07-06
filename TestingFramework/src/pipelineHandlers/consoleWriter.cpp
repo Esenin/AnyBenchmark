@@ -22,7 +22,7 @@ void ConsoleWriter::handleHook(BenchmarkEvent const &e)
         case BenchmarkEvent::EventType::benchmarkStarted:
         {
             cout << "Test\t" << mBenchmarkName << "\thas been started"
-                 << "\t(Using " << mRoundsCount << " to get average time)" << endl;
+                 << "\t(Using " << mRoundsCount << " repeats to get average time)" << endl;
             mBenchStartedTime = std::chrono::high_resolution_clock::now();
             break;
         }

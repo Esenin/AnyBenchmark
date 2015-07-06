@@ -9,10 +9,9 @@ int main()
 {
     benchmark::Benchmaker benchmark;
 
-    //uncomment this to save data to file
-    benchmark.setLogginToFile(benchmark::FileOutput::none);
-
     matrixBenchmark(benchmark);
+
+    measurementTypeCompare(benchmark);
 
     return 0;
 }

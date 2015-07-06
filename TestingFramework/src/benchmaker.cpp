@@ -1,6 +1,7 @@
 #include "../include/benchmaker.h"
 #include <iostream>
 #include <thread>
+#include <cmath>
 
 #include "../src/pipelineHandlers/consoleWriter.h"
 #include "../src/pipelineHandlers/fileWriter.h"
@@ -12,11 +13,50 @@ using namespace benchmark::impl;
 
 bool const hasNext = true;
 
+namespace
+{
+struct TimeValue
+{
+    decltype(std::chrono::steady_clock::now()) realTV;
+    clock_t cpuTV;
+};
+
+inline void burnTimestamp(TimeValue &start)
+{
+    start.cpuTV = clock();
+    start.realTV = std::chrono::steady_clock::now();
+}
+
+long getElapsedTime(TimeValue const &start, TimeValue const &stop, MeasureType const &type)
+{
+    long const cputvDiff = (type != MeasureType::realTime)?
+                           static_cast<long>(double(stop.cpuTV - start.cpuTV) / CLOCKS_PER_SEC * 1000)
+                           : 0;
+
+    long const rtvDiff = (type != MeasureType::cpuTime)?
+                         std::chrono::duration_cast<std::chrono::milliseconds>(stop.realTV - start.realTV).count()
+                         : 0;
+
+    switch (type)
+    {
+        case MeasureType::cpuTime:
+            return cputvDiff;
+        case MeasureType::realTime:
+            return rtvDiff;
+        case MeasureType::hybrid:
+            return static_cast<long>((2 * double(cputvDiff) + double(rtvDiff)) / 3 );
+    }
+
+}
+
+} // anonymous namespace
+
 Benchmaker::Benchmaker()
-    : mFileFormat(FileOutput::none)
-    , mRoundsCount(10)
-    , mTestObj(nullptr)
-    , mParamGenerator([]() { return std::make_pair(false, 0); })
+        : mFileFormat(FileOutput::none)
+          , mMeasureType(MeasureType::cpuTime)
+          , mRoundsCount(10)
+          , mTestObj(nullptr)
+          , mParamGenerator([]() { return std::make_pair(false, 0); })
 {
     mPipeline.appendHandler(UniqueEventHandler(new ConsoleWriter()));
     mPipeline.appendHandler(UniqueEventHandler(new FileWriter()));
@@ -39,11 +79,12 @@ void Benchmaker::makeBenchmark()
         int mainParam = nextArg.second;
         mPipeline.emitEvent(RoundSeriesStartedEvent(mainParam));
         long double average = 0;
-        for (int i = 0; i < mRoundsCount; i++)
+        int const warmupIterations = 1;
+        for (int i = 0; i < mRoundsCount + warmupIterations; i++)
         {
             try
             {
-                average += makeRound(mainParam);
+                average += (i)? makeRound(mainParam) : 0; // first iteration for warmup
             }
             catch (std::exception &e)
             {
@@ -101,12 +142,13 @@ long Benchmaker::makeRound(int const &paramN)
 
 long Benchmaker::makeTest()
 {
-    auto startTime = std::chrono::high_resolution_clock::now();
+    TimeValue start, stop;
+    burnTimestamp(start);
 
     mTestObj->run();
 
-    auto stopTime = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime).count();
+    burnTimestamp(stop);
+    return getElapsedTime(start, stop, mMeasureType);
 }
 
 void Benchmaker::configureBenchmark()
@@ -204,7 +246,6 @@ void Benchmaker::setTestingParam(std::initializer_list<int> list)
         else
         {
             idx = 0;
-            mParamList.clear();
             return std::make_pair(!hasNext, 0);
         }
     };
@@ -213,4 +254,9 @@ void Benchmaker::setTestingParam(std::initializer_list<int> list)
 void Benchmaker::setTestingParam(Benchmaker::ParamGenerator paramYielder)
 {
     mParamGenerator = paramYielder;
+}
+
+void Benchmaker::setMeasureType(MeasureType measureType)
+{
+    mMeasureType = measureType;
 }

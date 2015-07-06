@@ -72,8 +72,8 @@ struct RoundSeriesFinishedEvent : public BenchmarkEvent
     int const param;
     long double const milliseconds;
 
-    RoundSeriesFinishedEvent(int const &param, long double const &ms) :
-            BenchmarkEvent(EventType::roundSeriesFinished), param(param), milliseconds(ms)
+    RoundSeriesFinishedEvent(int const &param, long double const &ms)
+        : BenchmarkEvent(EventType::roundSeriesFinished), param(param), milliseconds(ms)
     { }
 };
 
@@ -89,7 +89,7 @@ struct BenchmarkCrashedEvent : public BenchmarkEvent
     std::string cause;
 
     BenchmarkCrashedEvent(std::string cause)
-            : BenchmarkEvent(EventType::benchmarkCrashed), cause(cause)
+        : BenchmarkEvent(EventType::benchmarkCrashed), cause(cause)
     { }
 };
 
