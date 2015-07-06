@@ -160,7 +160,7 @@ void Benchmaker::configureBenchmark()
     }
 
     mResultsFilename = ((mBenchmarkName.size())? mBenchmarkName : "unnamed_") + getTimeString()
-            + "(v" +std::to_string(rand() % 1000) + ").txt";
+            + "(v" +std::to_string(rand() % 1000) + ")." + (mFileFormat == FileOutput::csv? "csv" : "txt");
 
     mPipeline.emitEvent(ReconfigurationEvent(mBenchmarkName, mResultsFilename, mRoundsCount,
                                              (prevObjectPtr == mTestObj), mFileFormat));
