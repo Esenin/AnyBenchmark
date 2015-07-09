@@ -9,9 +9,12 @@ int main()
 {
     benchmark::Benchmaker benchmark;
 
+    DEBUG("Check debug macro 1");
     matrixBenchmark(benchmark);
 
-    measurementTypeCompare(benchmark);
+    DEBUG2("Check debug macro 2");
+
+//    measurementTypeCompare(benchmark);
 
     return 0;
 }

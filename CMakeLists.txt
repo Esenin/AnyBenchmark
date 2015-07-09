@@ -22,7 +22,8 @@ set(SOURCE_FILES
     TestingFramework/src/pipelineHandlers/pipelineHolder.h
     TestingFramework/src/benchmaker.cpp
     TestingFramework/include/benchmaker.h
-    TestingFramework/include/iTestObject.h)
+    TestingFramework/include/iTestObject.h
+    TestingFramework/include/constants.h)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)

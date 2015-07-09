@@ -2,15 +2,10 @@
 
 #include <string>
 
+#include "../../include/constants.h"
+
 namespace benchmark
 {
-enum class FileOutput
-{
-    none = 0
-    , humanReadable = 1
-    , csv = 2
-};
-
 namespace impl
 {
 struct BenchmarkEvent

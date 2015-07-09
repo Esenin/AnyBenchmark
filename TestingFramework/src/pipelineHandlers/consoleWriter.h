@@ -12,6 +12,7 @@ namespace impl
 class ConsoleWriter : public IEventHandler
 {
 public:
+    ConsoleWriter() = default;
 protected:
     virtual void handleHook(BenchmarkEvent const &e);
 

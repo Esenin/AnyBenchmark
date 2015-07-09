@@ -1,5 +1,4 @@
 #include "../include/benchmaker.h"
-#include <iostream>
 #include <thread>
 #include <cmath>
 
@@ -46,17 +45,17 @@ long getElapsedTime(TimeValue const &start, TimeValue const &stop, MeasureType c
         case MeasureType::hybrid:
             return static_cast<long>((2 * double(cputvDiff) + double(rtvDiff)) / 3 );
     }
-
 }
 
 } // anonymous namespace
 
 Benchmaker::Benchmaker()
         : mFileFormat(FileOutput::none)
-          , mMeasureType(MeasureType::cpuTime)
-          , mRoundsCount(10)
-          , mTestObj(nullptr)
-          , mParamGenerator([]() { return std::make_pair(false, 0); })
+        , mMeasureType(MeasureType::cpuTime)
+        , mRoundsCount(10)
+        , mDivisionFactor(0)
+        , mTestObj(nullptr)
+        , mParamGenerator([]() { return std::make_pair(false, 0); })
 {
     mPipeline.appendHandler(UniqueEventHandler(new ConsoleWriter()));
     mPipeline.appendHandler(UniqueEventHandler(new FileWriter()));
@@ -68,7 +67,7 @@ Benchmaker::~Benchmaker()
     mPipeline.resetPipeline();
 }
 
-void Benchmaker::makeBenchmark()
+ResultsQueue Benchmaker::makeBenchmark()
 {
     configureBenchmark();
     mPipeline.emitEvent(BenchmarkStartedEvent());
@@ -89,18 +88,18 @@ void Benchmaker::makeBenchmark()
             catch (std::exception &e)
             {
                 mPipeline.emitEvent(BenchmarkCrashedEvent(e.what()));
-                throw e;
+                throw;
             }
         }
         average /= mRoundsCount;
+        if (mDivisionFactor)
+            average /= mDivisionFactor;
         mPipeline.emitEvent(RoundSeriesFinishedEvent(mainParam, average));
-
+        mBenchmarkResults.push_back(std::make_tuple(mainParam, average));
     }
 
-
     mPipeline.emitEvent(BenchmarkFinishedEvent());
-
-
+    return mBenchmarkResults;
 }
 
 void Benchmaker::setRunnableObject(ITestObject *object)
@@ -166,6 +165,8 @@ void Benchmaker::configureBenchmark()
                                              (prevObjectPtr == mTestObj), mFileFormat));
 
     prevObjectPtr = mTestObj;
+
+    mBenchmarkResults.clear();
 }
 
 void Benchmaker::freeTestObject()
@@ -259,4 +260,9 @@ void Benchmaker::setTestingParam(Benchmaker::ParamGenerator paramYielder)
 void Benchmaker::setMeasureType(MeasureType measureType)
 {
     mMeasureType = measureType;
+}
+
+void Benchmaker::setDivisionFactor(size_t value)
+{
+    mDivisionFactor = value;
 }

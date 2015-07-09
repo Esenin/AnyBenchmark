@@ -36,7 +36,6 @@ void measurementTypeCompare(benchmark::Benchmaker &benchmark)
     benchmark.makeBenchmark();
 }
 
-
 void matrixBenchmark(benchmark::Benchmaker &benchmark)
 {
     benchmark.setRoundsCount(5);
@@ -60,5 +59,9 @@ void matrixBenchmark(benchmark::Benchmaker &benchmark)
     benchmark.setLogginToFile(benchmark::FileOutput::humanReadable);
     benchmark.setRunnableObject(new TransposedMultiplier);
     benchmark.setTestingParam(100, 400, 100);
-    benchmark.makeBenchmark();
+    benchmark.setDivisionFactor(10);
+    auto const results =  benchmark.makeBenchmark();
+
+    for (auto const &tup : results)
+        DEBUG2("param = " << std::get<0>(tup) << "\tTime [ms] = " << std::get<1>(tup));
 }
