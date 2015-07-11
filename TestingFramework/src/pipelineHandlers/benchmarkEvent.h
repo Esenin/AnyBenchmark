@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "../../include/constants.h"
 
 namespace benchmark
@@ -31,26 +29,29 @@ struct BenchmarkEvent
 
 struct ReconfigurationEvent : public BenchmarkEvent
 {
-    std::string const benchmarkName;
-    std::string const logFileName;
-    int const roundCount;
-    bool const hasBeenTestObjectChanched;
-    FileOutput const fileOutputFormat;
+    std::string benchmarkName;
+    std::string filename;
+    int roundCount;
+    bool hasBeenTestObjectChanched;
+    FileOutput fileOutputFormat;
+    bool isGroupedBenchmarkSet;
 
-    ReconfigurationEvent(std::string const &name, std::string const &filename, int roundCount
-                         , bool hasBeenTestObjectChanched, FileOutput fileOutputFormat)
+    ReconfigurationEvent(std::string const &name, std::string const &filename, int roundCount, bool hasBeenTestObjectChanched
+                         , FileOutput fileOutputFormat, bool isGroupedSet)
             : BenchmarkEvent(EventType::reconfiguration)
             , benchmarkName(name)
-            , logFileName(filename)
+            , filename(filename)
             , roundCount(roundCount)
             , hasBeenTestObjectChanched(hasBeenTestObjectChanched)
             , fileOutputFormat(fileOutputFormat)
+            , isGroupedBenchmarkSet(isGroupedSet)
     { }
 };
 
 struct BenchmarkStartedEvent : public BenchmarkEvent
 {
-    BenchmarkStartedEvent() : BenchmarkEvent(EventType::benchmarkStarted)
+    int benchmarkSetGroupId = -1; // -1 means there is no group now
+    BenchmarkStartedEvent(int benchmarkSetGroupId) : BenchmarkEvent(EventType::benchmarkStarted)
     { }
 };
 
@@ -75,7 +76,10 @@ struct RoundSeriesFinishedEvent : public BenchmarkEvent
 
 struct BenchmarkFinishedEvent : public BenchmarkEvent
 {
-    BenchmarkFinishedEvent() : BenchmarkEvent(EventType::benchmarkFinished)
+    ResultsQueue const * pResultsQueue;
+
+    BenchmarkFinishedEvent(ResultsQueue const* resultsQueue)
+            : BenchmarkEvent(EventType::benchmarkFinished), pResultsQueue(resultsQueue)
     { }
 };
 

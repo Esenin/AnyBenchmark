@@ -10,9 +10,13 @@ int main()
     benchmark::Benchmaker benchmark;
 
     DEBUG("Check debug macro 1");
-    matrixBenchmark(benchmark);
+
+    benchmarkGroupTest(benchmark);
 
     DEBUG2("Check debug macro 2");
+    matrixBenchmark(benchmark);
+
+    WARNING("Warning test");
 
 //    measurementTypeCompare(benchmark);
 

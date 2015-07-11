@@ -27,11 +27,13 @@ enum class FileOutput
 
 
 #ifndef NDEBUG
-    #define DEBUG(x) do { std::cerr << x << "\n"; } while (false)
-    #define DEBUG2(x) do { std::cerr << __func__ << ":" << #x << ": " << x << "\n"; } while (false)
+    #define DEBUG(x) do { std::cerr << "DEBUG:" << x << "\n"; } while (false)
+    #define DEBUG2(x) do { std::cerr << "DEBUG:" << __func__ << ":" << #x << ": " << x << "\n"; } while (false)
+    #define WARNING(x) do { std::cerr << "WARN:" << __FILE__ << " > " << __func__ << ": " << x << "\n"; } while (false)
 #else
     #define DEBUG(x) do {} while (false)
     #define DEBUG2(x) do {} while(false)
+    #define WARNING(x) do {} while(false)
 #endif
 
 }

@@ -49,14 +49,22 @@ long getElapsedTime(TimeValue const &start, TimeValue const &stop, MeasureType c
 
 } // anonymous namespace
 
+namespace
+{
+    int const noGroupAvailable = -1;
+
+} // anonymous namespace
+
 Benchmaker::Benchmaker()
         : mFileFormat(FileOutput::none)
         , mMeasureType(MeasureType::cpuTime)
+        , mGroupId(noGroupAvailable)
         , mRoundsCount(10)
         , mDivisionFactor(0)
         , mTestObj(nullptr)
         , mParamGenerator([]() { return std::make_pair(false, 0); })
 {
+    srand(static_cast<uint32_t>(clock()));
     mPipeline.appendHandler(UniqueEventHandler(new ConsoleWriter()));
     mPipeline.appendHandler(UniqueEventHandler(new FileWriter()));
 }
@@ -70,7 +78,7 @@ Benchmaker::~Benchmaker()
 ResultsQueue Benchmaker::makeBenchmark()
 {
     configureBenchmark();
-    mPipeline.emitEvent(BenchmarkStartedEvent());
+    mPipeline.emitEvent(BenchmarkStartedEvent(mGroupId));
 
     std::pair<bool, int> nextArg;
     while ((nextArg = mParamGenerator()).first == hasNext)
@@ -98,7 +106,7 @@ ResultsQueue Benchmaker::makeBenchmark()
         mBenchmarkResults.push_back(std::make_tuple(mainParam, average));
     }
 
-    mPipeline.emitEvent(BenchmarkFinishedEvent());
+    mPipeline.emitEvent(BenchmarkFinishedEvent(&mBenchmarkResults));
     return mBenchmarkResults;
 }
 
@@ -110,12 +118,17 @@ void Benchmaker::setRunnableObject(ITestObject *object)
 
 void Benchmaker::setLogginToFile(FileOutput const format)
 {
+    if (mGroupId > noGroupAvailable + 1) // group benchmarking is already started
+    {
+        WARNING("Ignoring fileformat change: group benchmarks are already started");
+        return;
+    }
     mFileFormat = format;
 }
 
 void Benchmaker::setBenchmarkName(std::string const &name)
 {
-    mBenchmarkName = name + "_";
+    mBenchmarkName = name;
 }
 
 void Benchmaker::setRoundsCount(unsigned int const &count)
@@ -158,11 +171,15 @@ void Benchmaker::configureBenchmark()
         throw std::invalid_argument("Set test object first!\n");
     }
 
-    mResultsFilename = ((mBenchmarkName.size())? mBenchmarkName : "unnamed_") + getTimeString()
-            + "(v" +std::to_string(rand() % 1000) + ")." + (mFileFormat == FileOutput::csv? "csv" : "txt");
+    mBenchmarkName = ((mBenchmarkName.size())? mBenchmarkName : "unnamed");
 
-    mPipeline.emitEvent(ReconfigurationEvent(mBenchmarkName, mResultsFilename, mRoundsCount,
-                                             (prevObjectPtr == mTestObj), mFileFormat));
+    mResultsFilename = (mGroupId <= noGroupAvailable + 1)? constructFilename() : mResultsFilename;
+
+    mPipeline.emitEvent(ReconfigurationEvent(mBenchmarkName, mResultsFilename, mRoundsCount, (prevObjectPtr == mTestObj)
+                                             , mFileFormat, mGroupId != noGroupAvailable));
+
+    if (mGroupId != noGroupAvailable)
+        ++mGroupId;
 
     prevObjectPtr = mTestObj;
 
@@ -175,24 +192,13 @@ void Benchmaker::freeTestObject()
     mTestObj = nullptr;
 }
 
-std::string Benchmaker::getTimeString()
-{
-    size_t const bufLen = 20;
-    std::string timeStr(bufLen, 0);
-    auto curTimePoint = std::chrono::system_clock::now();
-    auto stdTime = std::chrono::system_clock::to_time_t(curTimePoint);
-    auto charUsed = std::strftime(&timeStr[0], bufLen, "%H-%M-%S", std::localtime(&stdTime));
-    if (!charUsed)
-        throw std::runtime_error("Cannot get current time");
-    else
-        timeStr = timeStr.substr(0, charUsed);
-
-    return timeStr;
-}
-
-
 void Benchmaker::setTestingParam(int x)
 {
+    if (mGroupId > noGroupAvailable + 1)
+    {
+        WARNING("Ignoring param generator change among group benchmark");
+        return;
+    }
     mParamGenerator = [x] ()
     {
         static bool isUsed = false;
@@ -203,7 +209,7 @@ void Benchmaker::setTestingParam(int x)
         }
         else
         {
-            isUsed = false; // clear flag
+            isUsed = false;
             return std::make_pair(!hasNext, 0);
         }
     };
@@ -211,6 +217,11 @@ void Benchmaker::setTestingParam(int x)
 
 void Benchmaker::setTestingParam(int from, int to, int step)
 {
+    if (mGroupId > noGroupAvailable + 1)
+    {
+        WARNING("Ignoring param generator change among group benchmark");
+        return;
+    }
     mParamGenerator = [from, to, step] ()
     {
         static int lastVal = 0;
@@ -235,6 +246,11 @@ void Benchmaker::setTestingParam(int from, int to, int step)
 
 void Benchmaker::setTestingParam(std::initializer_list<int> list)
 {
+    if (mGroupId > noGroupAvailable + 1)
+    {
+        WARNING("Ignoring param generator change among group benchmark");
+        return;
+    }
     mParamList.clear();
     mParamList.reserve(list.size());
     for (int const &x : list)
@@ -254,6 +270,11 @@ void Benchmaker::setTestingParam(std::initializer_list<int> list)
 
 void Benchmaker::setTestingParam(Benchmaker::ParamGenerator paramYielder)
 {
+    if (mGroupId > noGroupAvailable + 1)
+    {
+        WARNING("Ignoring param generator change among group benchmark");
+        return;
+    }
     mParamGenerator = paramYielder;
 }
 
@@ -265,4 +286,38 @@ void Benchmaker::setMeasureType(MeasureType measureType)
 void Benchmaker::setDivisionFactor(size_t value)
 {
     mDivisionFactor = value;
+}
+
+void Benchmaker::endGroup()
+{
+    mGroupId = noGroupAvailable;
+    mPipeline.emitEvent(ReconfigurationEvent(mBenchmarkName, mResultsFilename, mRoundsCount, false, mFileFormat, false));
+}
+
+void Benchmaker::beginGroup()
+{
+    mGroupId = noGroupAvailable + 1;
+}
+
+
+std::string Benchmaker::getTimeString() const
+{
+    size_t const bufLen = 20;
+    std::string timeStr(bufLen, 0);
+    auto curTimePoint = std::chrono::system_clock::now();
+    auto stdTime = std::chrono::system_clock::to_time_t(curTimePoint);
+    auto charUsed = std::strftime(&timeStr[0], bufLen, "%H-%M-%S", std::localtime(&stdTime));
+    if (!charUsed)
+        throw std::runtime_error("Cannot get current time");
+    else
+        timeStr = timeStr.substr(0, charUsed);
+
+    return timeStr;
+}
+
+std::string Benchmaker::constructFilename() const
+{
+    return (mGroupId != noGroupAvailable? "group_" : "") + mBenchmarkName + "_"
+    + getTimeString() + "." +std::to_string(rand() % 1000) + "."
+    + (mFileFormat == FileOutput::csv? "csv" : "txt");
 }

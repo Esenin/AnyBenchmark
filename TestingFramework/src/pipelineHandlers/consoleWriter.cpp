@@ -1,5 +1,4 @@
 #include "consoleWriter.h"
-#include <iostream>
 #include <math.h>
 
 using namespace benchmark::impl;
@@ -14,7 +13,7 @@ void ConsoleWriter::handleHook(BenchmarkEvent const &e)
         {
             auto config = dynamic_cast<const ReconfigurationEvent *>(&e);
             mBenchmarkName = config->benchmarkName;
-            mLogFilename = config->logFileName;
+            mLogFilename = config->filename;
             mOutputFormat = config->fileOutputFormat;
             mRoundsCount = config->roundCount;
             break;

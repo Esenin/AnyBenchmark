@@ -36,26 +36,46 @@ void measurementTypeCompare(benchmark::Benchmaker &benchmark)
     benchmark.makeBenchmark();
 }
 
+void benchmarkGroupTest(benchmark::Benchmaker &benchmark)
+{
+    benchmark.setLogginToFile(benchmark::FileOutput::csv);
+
+    benchmark.beginGroup();
+    benchmark.setBenchmarkName("naive_mult");
+    benchmark.setTestingParam({100, 200, 400});
+
+    benchmark.setRunnableObject(new RegularMultiplier);
+    benchmark.makeBenchmark();
+
+    benchmark.setTestingParam(5); // should make warning
+
+    benchmark.setBenchmarkName("straight_mult");
+    benchmark.setRunnableObject(new TransposedMultiplier);
+    benchmark.makeBenchmark();
+
+    benchmark.endGroup();
+}
+
 void matrixBenchmark(benchmark::Benchmaker &benchmark)
 {
-    benchmark.setRoundsCount(5);
+    benchmark.setRoundsCount(3);
     benchmark.setMeasureType(benchmark::MeasureType::cpuTime);
     // Regular multiplying
-    benchmark.setBenchmarkName("Naive multipying");
+    benchmark.setBenchmarkName("Naive_multipying");
     benchmark.setLogginToFile(benchmark::FileOutput::csv);
     benchmark.setRunnableObject(new RegularMultiplier);
     benchmark.setTestingParam(100, 400, 100);  // (100, 1000, 50) looks interesting
     benchmark.makeBenchmark();
 
     // recursive: only for 2^N matrix
-    benchmark.setBenchmarkName("recursive multipying");
+    benchmark.setBenchmarkName("Recursive_multipying");
     benchmark.setLogginToFile(benchmark::FileOutput::none);
     benchmark.setRunnableObject(new RecursiveMultiplier);
     benchmark.setTestingParam({128, 256, 512});
     benchmark.makeBenchmark();
 
     // transposed
-    benchmark.setBenchmarkName("transposed multipying");
+    benchmark.setBenchmarkName("Transposed_multipying");
     benchmark.setLogginToFile(benchmark::FileOutput::humanReadable);
     benchmark.setRunnableObject(new TransposedMultiplier);
     benchmark.setTestingParam(100, 400, 100);
@@ -63,5 +83,6 @@ void matrixBenchmark(benchmark::Benchmaker &benchmark)
     auto const results =  benchmark.makeBenchmark();
 
     for (auto const &tup : results)
-        DEBUG2("param = " << std::get<0>(tup) << "\tTime [ms] = " << std::get<1>(tup));
+        DEBUG2(std::get<0>(tup) << "\t" << std::get<1>(tup));
+
 }

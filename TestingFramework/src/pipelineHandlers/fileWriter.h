@@ -12,23 +12,39 @@ namespace impl
 class FileWriter : public IEventHandler
 {
 public:
-    FileWriter();
+    FileWriter() = default;
     ~FileWriter();
 
 protected:
     virtual void handleHook(BenchmarkEvent const &e);
 
 private:
-    FileOutput mOutputFormat;
+    FileOutput mOutputFormat = FileOutput::none;
     std::string mFilename;
+    std::string mBenchmarkName;
     std::fstream mLogger;
+    bool mIsGroupedBenchmarkSet = false;
 
-    void printHumanReadable(RoundSeriesFinishedEvent const *e);
+    enum class FWState
+    {
+        idle
+        , writeBenchmark
+        , writeFirstGroupBenchmark
+        , writeNextGroupBenchmark
+    };
+    FWState mState = FWState::idle;
+    bool setNewState(FWState state);
 
-    void printInCSV(RoundSeriesFinishedEvent const *e);
+    void handleReconfig(ReconfigurationEvent const *e);
+    void handleBenchmarkStart();
+    void handleBenchmarkStop(BenchmarkFinishedEvent const *e);
+    void handleGroupStateChange(bool isGroupedNext);
+
+    void printHumanReadable(ResultsQueue const* results);
+    void printCSVHeader(ResultsQueue const* results);
+    void printInCSV(ResultsQueue const* results);
 
     void openFile();
-
     void closeFile();
 };
 
