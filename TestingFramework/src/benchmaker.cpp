@@ -91,7 +91,10 @@ ResultsQueue Benchmaker::makeBenchmark()
         {
             try
             {
-                average += (i)? makeRound(mainParam) : 0; // first iteration for warmup
+                if (i)
+                    average += makeRound(mainParam);
+                else
+                    makeRound(mainParam); // first iteration for warmup
             }
             catch (std::exception &e)
             {
